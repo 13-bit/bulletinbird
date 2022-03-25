@@ -1,10 +1,11 @@
-package ebird
+package birds
 
 import (
+	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"net/http"
+	"os"
+	"sync"
 )
 
 type Bird struct {
@@ -19,16 +20,27 @@ type Bird struct {
 	ReportAs             string `json:"reportAs"`
 }
 
-func EbirdTest() {
-	resp, err := http.Get("https://api.ebird.org/v2/ref/taxonomy/ebird?fmt=json&species=amecro")
-	if err != nil {
-		log.Fatalln(err)
-	}
+var birdList []Bird
+var once sync.Once
 
-	defer resp.Body.Close()
-	bodyBytes, _ := ioutil.ReadAll(resp.Body)
+func GetBirdList() []Bird {
+	once.Do(func() {
+		homeDir, _ := os.UserHomeDir()
+		taxonomyFilePath := fmt.Sprintf("%s/.birdboard/taxonomy.json", homeDir)
 
-	// Convert response body to string
-	bodyString := string(bodyBytes)
-	fmt.Println(bodyString)
+		// Load taxonomy from file
+		f, err := os.Open(taxonomyFilePath)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		defer f.Close()
+
+		err = json.NewDecoder(f).Decode(&birdList)
+		if err != nil {
+			log.Fatal(err)
+		}
+	})
+
+	return birdList
 }

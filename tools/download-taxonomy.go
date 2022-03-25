@@ -8,12 +8,14 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/13-bit/birdboard/internal/ebird"
+	birds "github.com/13-bit/birdboard/internal/birds"
 )
 
 func DownloadTaxonomy() {
 	homeDir, _ := os.UserHomeDir()
 	taxonomyFilePath := fmt.Sprintf("%s/.birdboard/taxonomy.json", homeDir)
+
+	fmt.Println("Downloading taxonomy...")
 
 	resp, err := http.Get("https://api.ebird.org/v2/ref/taxonomy/ebird?fmt=json&category=species")
 	if err != nil {
@@ -24,20 +26,24 @@ func DownloadTaxonomy() {
 	bodyBytes, _ := ioutil.ReadAll(resp.Body)
 
 	// bodyString := string(bodyBytes)
-	var taxonomy []ebird.Bird
+	var taxonomy []birds.Bird
 
 	err = json.Unmarshal(bodyBytes, &taxonomy)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var filteredTaxonomy []ebird.Bird
+	fmt.Println("Filtering taxonomy...")
+
+	var filteredTaxonomy []birds.Bird
 
 	for _, bird := range taxonomy {
 		if bird.ReportAs == "" {
 			filteredTaxonomy = append(filteredTaxonomy, bird)
 		}
 	}
+
+	fmt.Println("Saving taxonomy...")
 
 	f, err := os.Create(taxonomyFilePath)
 	if err != nil {
@@ -49,6 +55,8 @@ func DownloadTaxonomy() {
 	taxonomyJson, err := json.MarshalIndent(filteredTaxonomy, "", "  ")
 
 	f.Write(taxonomyJson)
+
+	fmt.Printf("%d birds saved to %s.\n", len(filteredTaxonomy), taxonomyFilePath)
 }
 
 func main() {

@@ -47,6 +47,27 @@ go_repository(
     version = "v2.4.0",
 )
 
+go_repository(
+    name = "com_github_bits_and_blooms_bitset",
+    importpath = "github.com/bits-and-blooms/bitset",
+    sum = "h1:Kn4yilvwNtMACtf1eYDlG8H77R07mZSPbMjLyS07ChA=",
+    version = "v1.2.0",
+)
+
+go_repository(
+    name = "com_github_bits_and_blooms_bloom_v3",
+    importpath = "github.com/bits-and-blooms/bloom/v3",
+    sum = "h1:N+g3GTQ0TVbghahYyzwkQbMZR+IwIwFFC8dpIChtN0U=",
+    version = "v3.2.0",
+)
+
+go_repository(
+    name = "com_github_spaolacci_murmur3",
+    importpath = "github.com/spaolacci/murmur3",
+    sum = "h1:7c1g84S4BPRrfL5Xrdp6fOJ206sU9y293DDHaoy0bLI=",
+    version = "v1.1.0",
+)
+
 go_rules_dependencies()
 
 go_register_toolchains(version = "1.18")

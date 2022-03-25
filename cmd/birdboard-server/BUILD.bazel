@@ -5,10 +5,7 @@ go_library(
     srcs = ["birdboard-server.go"],
     importpath = "github.com/13-bit/birdboard/cmd/birdboard-server",
     visibility = ["//visibility:private"],
-    deps = [
-        "//internal/config",
-        "//internal/ebird",
-    ],
+    deps = ["//internal/birds"],
 )
 
 go_binary(
