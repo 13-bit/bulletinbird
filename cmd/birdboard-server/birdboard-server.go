@@ -18,4 +18,5 @@ func main() {
 	fmt.Println(configuration.EbirdToken)
 
 	ebird.EbirdTest()
+	ebird.DownloadTaxonomy()
 }
