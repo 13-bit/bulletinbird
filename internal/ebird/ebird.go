@@ -10,20 +10,15 @@ import (
 )
 
 type Taxon struct {
-	Name                 string   `json:"name"`
-	Quantity             int      `json:"quantity"`
-	ScientificName       string   `json:"sciName"`
-	CommonName           string   `json:"comName"`
-	SpeciesCode          string   `json:"speciesCode"`
-	Category             string   `json:"category"`
-	TaxonOrder           float64  `json:"taxonOrder"`
-	BandingCodes         []string `json:"bandingCodes"`
-	CommonNameCodes      []string `json:"comNameCodes"`
-	ScientificNameCodes  []string `json:"sciNameCodes"`
-	Order                string   `json:"order"`
-	FamilyCode           string   `json:"familyCode"`
-	FamilyCommonName     string   `json:"familyComName"`
-	FamilyScientificName string   `json:"familySciName"`
+	ScientificName       string `json:"sciName"`
+	CommonName           string `json:"comName"`
+	SpeciesCode          string `json:"speciesCode"`
+	Category             string `json:"category"`
+	Order                string `json:"order"`
+	FamilyCode           string `json:"familyCode"`
+	FamilyCommonName     string `json:"familyComName"`
+	FamilyScientificName string `json:"familySciName"`
+	ReportAs             string `json:"reportAs"`
 }
 
 func EbirdTest() {
@@ -44,7 +39,7 @@ func DownloadTaxonomy() {
 	homeDir, _ := os.UserHomeDir()
 	taxonomyFilePath := fmt.Sprintf("%s/.birdboard/taxonomy.json", homeDir)
 
-	resp, err := http.Get("https://api.ebird.org/v2/ref/taxonomy/ebird?fmt=json")
+	resp, err := http.Get("https://api.ebird.org/v2/ref/taxonomy/ebird?fmt=json&category=species")
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -53,11 +48,19 @@ func DownloadTaxonomy() {
 	bodyBytes, _ := ioutil.ReadAll(resp.Body)
 
 	// bodyString := string(bodyBytes)
-	var taxa []Taxon
+	var taxonomy []Taxon
 
-	err = json.Unmarshal(bodyBytes, &taxa)
+	err = json.Unmarshal(bodyBytes, &taxonomy)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	var filteredTaxonomy []Taxon
+
+	for _, taxon := range taxonomy {
+		if taxon.ReportAs == "" {
+			filteredTaxonomy = append(filteredTaxonomy, taxon)
+		}
 	}
 
 	f, err := os.Create(taxonomyFilePath)
@@ -67,7 +70,7 @@ func DownloadTaxonomy() {
 
 	defer f.Close()
 
-	taxaJson, err := json.MarshalIndent(taxa, "", "  ")
+	taxonomyJson, err := json.MarshalIndent(filteredTaxonomy, "", "  ")
 
-	f.Write(taxaJson)
+	f.Write(taxonomyJson)
 }
