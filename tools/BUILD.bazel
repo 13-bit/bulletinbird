@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "taxonomy_lib",
+    srcs = ["taxonomy.go"],
+    importpath = "github.com/13-bit/birdboard/tools/taxonomy",
+    visibility = ["//visibility:private"],
+    deps = ["//internal/ebird"],
+)
+
+go_binary(
+    name = "taxonomy",
+    embed = [":taxonomy_lib"],
+    visibility = ["//visibility:public"],
+)
