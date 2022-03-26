@@ -9,15 +9,9 @@ import (
 )
 
 type Bird struct {
-	ScientificName       string `json:"sciName"`
-	CommonName           string `json:"comName"`
-	SpeciesCode          string `json:"speciesCode"`
-	Category             string `json:"category"`
-	Order                string `json:"order"`
-	FamilyCode           string `json:"familyCode"`
-	FamilyCommonName     string `json:"familyComName"`
-	FamilyScientificName string `json:"familySciName"`
-	ReportAs             string `json:"reportAs"`
+	ScientificName string `json:"sciName"`
+	CommonName     string `json:"comName"`
+	SpeciesCode    string `json:"speciesCode"`
 }
 
 var birdList []Bird
@@ -43,4 +37,22 @@ func GetBirdList() []Bird {
 	})
 
 	return birdList
+}
+
+func SaveBirdList() {
+	homeDir, _ := os.UserHomeDir()
+	taxonomyFilePath := fmt.Sprintf("%s/.birdboard/taxonomy.json", homeDir)
+
+	f, err := os.Create(taxonomyFilePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer f.Close()
+
+	taxonomyJson, err := json.MarshalIndent(GetBirdList(), "", "  ")
+
+	f.Write(taxonomyJson)
+
+	fmt.Printf("%d birds saved to %s.\n", len(GetBirdList()), taxonomyFilePath)
 }

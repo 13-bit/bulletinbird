@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "botd",
+    srcs = ["botd.go"],
+    importpath = "github.com/13-bit/birdboard/internal/botd",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/birds",
+        "@com_github_bits_and_blooms_bloom_v3//:bloom",
+    ],
+)

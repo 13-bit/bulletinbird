@@ -11,13 +11,21 @@ import (
 	birds "github.com/13-bit/birdboard/internal/birds"
 )
 
+type Taxon struct {
+	ScientificName string `json:"sciName"`
+	CommonName     string `json:"comName"`
+	SpeciesCode    string `json:"speciesCode"`
+	Category       string `json:"category"`
+	ReportAs       string `json:"reportAs"`
+}
+
 func DownloadTaxonomy() {
 	homeDir, _ := os.UserHomeDir()
 	taxonomyFilePath := fmt.Sprintf("%s/.birdboard/taxonomy.json", homeDir)
 
 	fmt.Println("Downloading taxonomy...")
 
-	resp, err := http.Get("https://api.ebird.org/v2/ref/taxonomy/ebird?fmt=json&category=species")
+	resp, err := http.Get("https://api.ebird.org/v2/ref/taxonomy/ebird?fmt=json")
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -26,7 +34,7 @@ func DownloadTaxonomy() {
 	bodyBytes, _ := ioutil.ReadAll(resp.Body)
 
 	// bodyString := string(bodyBytes)
-	var taxonomy []birds.Bird
+	var taxonomy []Taxon
 
 	err = json.Unmarshal(bodyBytes, &taxonomy)
 	if err != nil {
@@ -37,9 +45,16 @@ func DownloadTaxonomy() {
 
 	var filteredTaxonomy []birds.Bird
 
-	for _, bird := range taxonomy {
-		if bird.ReportAs == "" {
-			filteredTaxonomy = append(filteredTaxonomy, bird)
+	for _, taxon := range taxonomy {
+		if taxon.ReportAs == "" {
+			if taxon.Category == "species" {
+				bird := birds.Bird{}
+				bird.ScientificName = taxon.ScientificName
+				bird.CommonName = taxon.CommonName
+				bird.SpeciesCode = taxon.SpeciesCode
+
+				filteredTaxonomy = append(filteredTaxonomy, bird)
+			}
 		}
 	}
 

@@ -1,15 +1,15 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 
 go_library(
-    name = "tools_lib",
+    name = "download-taxonomy_lib",
     srcs = ["download-taxonomy.go"],
-    importpath = "github.com/13-bit/birdboard/tools",
+    importpath = "github.com/13-bit/birdboard/tools/download-taxonomy",
     visibility = ["//visibility:private"],
     deps = ["//internal/birds"],
 )
 
 go_binary(
-    name = "tools",
-    embed = [":tools_lib"],
+    name = "download-taxonomy",
+    embed = [":download-taxonomy_lib"],
     visibility = ["//visibility:public"],
 )

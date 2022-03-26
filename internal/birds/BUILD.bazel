@@ -2,14 +2,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "birds",
-    srcs = [
-        "birds.go",
-        "botd.go",
-    ],
+    srcs = ["birds.go"],
     importpath = "github.com/13-bit/birdboard/internal/birds",
     visibility = ["//:__subpackages__"],
-    deps = [
-        "//internal/config",
-        "@com_github_bits_and_blooms_bloom_v3//:bloom",
-    ],
 )

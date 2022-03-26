@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	birds "github.com/13-bit/birdboard/internal/birds"
+	"github.com/13-bit/birdboard/internal/botd"
 )
 
 type Configuration struct {
@@ -13,11 +13,5 @@ type Configuration struct {
 func main() {
 	fmt.Println("Welcome to Birdboard!")
 
-	// configuration := config.GetConfiguration()
-	// fmt.Println(configuration.EbirdToken)
-
-	// ebird.EbirdTest()
-	// ebird.DownloadTaxonomy()
-	birds.GetBirdList()
-	birds.BirdOfTheDay()
+	botd.BirdOfTheDay()
 }
