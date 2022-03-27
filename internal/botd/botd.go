@@ -57,15 +57,17 @@ func BirdOfTheDay() {
 	pastBotd := GetPastBotd()
 
 	for {
-		idx, e := rand.Int(rand.Reader, big.NewInt(1000))
+		birdList := birds.GetBirdList()
+
+		idx, e := rand.Int(rand.Reader, big.NewInt(int64(len(birdList))))
 		if e != nil {
 			fmt.Print(e)
 		}
 
-		botd = birds.GetBirdList()[idx.Int64()]
+		botd = birdList[idx.Int64()]
 
-		if !pastBotd.Test([]byte(botd.SpeciesCode)) {
-			pastBotd.Add([]byte(botd.SpeciesCode))
+		if !pastBotd.Test([]byte(botd.CommonName)) {
+			pastBotd.Add([]byte(botd.CommonName))
 			break
 		}
 	}

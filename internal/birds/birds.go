@@ -11,7 +11,7 @@ import (
 type Bird struct {
 	ScientificName string `json:"sciName"`
 	CommonName     string `json:"comName"`
-	SpeciesCode    string `json:"speciesCode"`
+	GuideUrl       string `json:"guideUrl"`
 }
 
 var birdList []Bird
@@ -55,4 +55,33 @@ func SaveBirdList() {
 	f.Write(taxonomyJson)
 
 	fmt.Printf("%d birds saved to %s.\n", len(GetBirdList()), taxonomyFilePath)
+}
+
+// func EbirdUrl(speciesCode string) (string, error) {
+// 	url := fmt.Sprintf("https://www.allaboutbirds.org/guide/%s", speciesCode)
+
+// 	req, err := http.NewRequest("GET", url, nil)
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	client := new(http.Client)
+// 	client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
+// 		return errors.New("Redirect")
+// 	}
+
+// 	_, err = client.Do(req)
+// 	if err != nil {
+// 		fmt.Printf("-")
+// 		return "", errors.New(fmt.Sprintf("No guide page found for sepcies code %s", speciesCode))
+// 	}
+
+// 	fmt.Printf("+")
+
+// 	return url, nil
+// }
+
+func EbirdUrl(speciesCode string) string {
+	url := fmt.Sprintf("https://www.allaboutbirds.org/guide/%s", speciesCode)
+
+	return url
 }

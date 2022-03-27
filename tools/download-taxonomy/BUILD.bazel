@@ -5,7 +5,10 @@ go_library(
     srcs = ["download-taxonomy.go"],
     importpath = "github.com/13-bit/birdboard/tools/download-taxonomy",
     visibility = ["//visibility:private"],
-    deps = ["//internal/birds"],
+    deps = [
+        "//internal/birds",
+        "@com_github_puerkitobio_goquery//:goquery",
+    ],
 )
 
 go_binary(
