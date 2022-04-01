@@ -12,6 +12,7 @@ type Bird struct {
 	ScientificName string `json:"sciName"`
 	CommonName     string `json:"comName"`
 	GuideUrl       string `json:"guideUrl"`
+	ImgUrl         string `json:"imgUrl"`
 }
 
 var birdList []Bird
