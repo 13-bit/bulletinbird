@@ -1,11 +1,15 @@
 package birds
 
 import (
+	"container/list"
+	cr "crypto/rand"
 	"encoding/json"
 	"fmt"
 	"log"
+	"math/big"
+	mr "math/rand"
 	"os"
-	"sync"
+	"time"
 
 	"github.com/13-bit/birdboard/internal/config"
 )
@@ -17,29 +21,25 @@ type Bird struct {
 	ImgUrl         string `json:"imgUrl"`
 }
 
-var birdList []Bird
-var once sync.Once
+func GetTaxonomy() []Bird {
+	f, err := os.Open(config.TaxonomyFilePath())
+	if err != nil {
+		log.Fatal(err)
+	}
 
-func GetBirdList() []Bird {
-	once.Do(func() {
-		// Load taxonomy from file
-		f, err := os.Open(config.TaxonomyFilePath())
-		if err != nil {
-			log.Fatal(err)
-		}
+	defer f.Close()
 
-		defer f.Close()
+	var taxonomy []Bird
 
-		err = json.NewDecoder(f).Decode(&birdList)
-		if err != nil {
-			log.Fatal(err)
-		}
-	})
+	err = json.NewDecoder(f).Decode(&taxonomy)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	return birdList
+	return taxonomy
 }
 
-func SaveBirdList() {
+func SaveTaxonomy() {
 	f, err := os.Create(config.TaxonomyFilePath())
 	if err != nil {
 		log.Fatal(err)
@@ -47,38 +47,79 @@ func SaveBirdList() {
 
 	defer f.Close()
 
-	taxonomyJson, err := json.MarshalIndent(GetBirdList(), "", "  ")
+	taxonomy := GetTaxonomy()
+
+	taxonomyJson, err := json.MarshalIndent(taxonomy, "", "  ")
 
 	f.Write(taxonomyJson)
 
-	fmt.Printf("%d birds saved to %s.\n", len(GetBirdList()), config.TaxonomyFilePath())
+	fmt.Printf("%d birds saved to %s.\n", len(taxonomy), config.TaxonomyFilePath())
 }
 
-// func EbirdUrl(speciesCode string) (string, error) {
-// 	url := fmt.Sprintf("https://www.allaboutbirds.org/guide/%s", speciesCode)
+func RegenerateBirdList() {
+	taxonomy := GetTaxonomy()
+	birdList := list.New()
 
-// 	req, err := http.NewRequest("GET", url, nil)
-// 	if err != nil {
-// 		return "", err
-// 	}
-// 	client := new(http.Client)
-// 	client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
-// 		return errors.New("Redirect")
-// 	}
+	seed, e := cr.Int(cr.Reader, big.NewInt(time.Now().Unix()))
+	if e != nil {
+		fmt.Print(e)
+	}
 
-// 	_, err = client.Do(req)
-// 	if err != nil {
-// 		fmt.Printf("-")
-// 		return "", errors.New(fmt.Sprintf("No guide page found for sepcies code %s", speciesCode))
-// 	}
+	mr.Seed(seed.Int64())
+	randomIndices := mr.Perm(len(taxonomy))
 
-// 	fmt.Printf("+")
+	for _, idx := range randomIndices {
+		birdList.PushBack(taxonomy[idx])
+	}
 
-// 	return url, nil
-// }
+	SaveBirdList(birdList)
+}
 
-func EbirdUrl(speciesCode string) string {
-	url := fmt.Sprintf("https://www.allaboutbirds.org/guide/%s", speciesCode)
+func GetBirdList() *list.List {
+	f, err := os.Open(config.BirdListFilePath())
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	return url
+	defer f.Close()
+
+	var birds []Bird
+
+	err = json.NewDecoder(f).Decode(&birds)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	birdList := list.New()
+
+	for _, bird := range birds {
+		birdList.PushBack(bird)
+	}
+
+	return birdList
+}
+
+func SaveBirdList(birdList *list.List) {
+	if birdList.Len() == 0 {
+		RegenerateBirdList()
+	} else {
+		f, err := os.Create(config.BirdListFilePath())
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		defer f.Close()
+
+		birds := []Bird{}
+
+		for e := birdList.Front(); e != nil; e = e.Next() {
+			birds = append(birds, e.Value.(Bird))
+		}
+
+		birdListJson, err := json.MarshalIndent(birds, "", "  ")
+
+		f.Write(birdListJson)
+
+		fmt.Printf("%d birds saved to %s\n", len(birds), config.BirdListFilePath())
+	}
 }

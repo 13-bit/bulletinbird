@@ -5,9 +5,5 @@ go_library(
     srcs = ["botd.go"],
     importpath = "github.com/13-bit/birdboard/internal/botd",
     visibility = ["//:__subpackages__"],
-    deps = [
-        "//internal/birds",
-        "//internal/config",
-        "@com_github_bits_and_blooms_bloom_v3//:bloom",
-    ],
+    deps = ["//internal/birds"],
 )
