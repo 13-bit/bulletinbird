@@ -7,13 +7,11 @@ import (
 	"os"
 
 	"github.com/13-bit/birdboard/internal/birds"
+	"github.com/13-bit/birdboard/internal/config"
 	"github.com/PuerkitoBio/goquery"
 )
 
 func DownloadTaxonomyGuide() {
-	homeDir, _ := os.UserHomeDir()
-	taxonomyFilePath := fmt.Sprintf("%s/.birdboard/taxonomy.json", homeDir)
-
 	fmt.Println("Downloading taxonomy...")
 
 	var taxonomy []birds.Bird
@@ -45,7 +43,7 @@ func DownloadTaxonomyGuide() {
 
 	fmt.Println("Saving taxonomy...")
 
-	f, err := os.Create(taxonomyFilePath)
+	f, err := os.Create(config.TaxonomyFilePath())
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -56,7 +54,7 @@ func DownloadTaxonomyGuide() {
 
 	f.Write(taxonomyJson)
 
-	fmt.Printf("%d birds saved to %s\n", len(taxonomy), taxonomyFilePath)
+	fmt.Printf("%d birds saved to %s\n", len(taxonomy), config.TaxonomyFilePath())
 }
 
 func main() {

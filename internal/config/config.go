@@ -3,29 +3,14 @@ package config
 import (
 	"fmt"
 	"os"
-	"sync"
-
-	"github.com/tkanos/gonfig"
 )
 
-type Configuration struct {
-	EbirdToken string
+func TaxonomyFilePath() string {
+	homeDir, _ := os.UserHomeDir()
+	return fmt.Sprintf("%s/.birdboard/taxonomy.json", homeDir)
 }
 
-var configuration Configuration
-var once sync.Once
-
-func GetConfiguration() Configuration {
-	once.Do(func() {
-		homeDir, _ := os.UserHomeDir()
-		configFilePath := fmt.Sprintf("%s/.birdboard/config.json", homeDir)
-
-		configuration = Configuration{}
-		err := gonfig.GetConf(configFilePath, &configuration)
-		if err != nil {
-			panic(err)
-		}
-	})
-
-	return configuration
+func BotdFilePath() string {
+	homeDir, _ := os.UserHomeDir()
+	return fmt.Sprintf("%s/.birdboard/botd.json", homeDir)
 }

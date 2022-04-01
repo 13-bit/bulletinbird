@@ -6,6 +6,8 @@ import (
 	"log"
 	"os"
 	"sync"
+
+	"github.com/13-bit/birdboard/internal/config"
 )
 
 type Bird struct {
@@ -20,11 +22,8 @@ var once sync.Once
 
 func GetBirdList() []Bird {
 	once.Do(func() {
-		homeDir, _ := os.UserHomeDir()
-		taxonomyFilePath := fmt.Sprintf("%s/.birdboard/taxonomy.json", homeDir)
-
 		// Load taxonomy from file
-		f, err := os.Open(taxonomyFilePath)
+		f, err := os.Open(config.TaxonomyFilePath())
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -41,10 +40,7 @@ func GetBirdList() []Bird {
 }
 
 func SaveBirdList() {
-	homeDir, _ := os.UserHomeDir()
-	taxonomyFilePath := fmt.Sprintf("%s/.birdboard/taxonomy.json", homeDir)
-
-	f, err := os.Create(taxonomyFilePath)
+	f, err := os.Create(config.TaxonomyFilePath())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -55,7 +51,7 @@ func SaveBirdList() {
 
 	f.Write(taxonomyJson)
 
-	fmt.Printf("%d birds saved to %s.\n", len(GetBirdList()), taxonomyFilePath)
+	fmt.Printf("%d birds saved to %s.\n", len(GetBirdList()), config.TaxonomyFilePath())
 }
 
 // func EbirdUrl(speciesCode string) (string, error) {

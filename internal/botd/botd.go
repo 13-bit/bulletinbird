@@ -10,6 +10,7 @@ import (
 	"sync"
 
 	"github.com/13-bit/birdboard/internal/birds"
+	"github.com/13-bit/birdboard/internal/config"
 	"github.com/bits-and-blooms/bloom/v3"
 )
 
@@ -18,11 +19,8 @@ var once sync.Once
 
 func GetPastBotd() *bloom.BloomFilter {
 	once.Do(func() {
-		homeDir, _ := os.UserHomeDir()
-		botdFilePath := fmt.Sprintf("%s/.birdboard/botd.json", homeDir)
-
 		// Load taxonomy from file
-		f, err := os.Open(botdFilePath)
+		f, err := os.Open(config.BotdFilePath())
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -78,12 +76,9 @@ func BirdOfTheDay() {
 }
 
 func SaveBotd() {
-	homeDir, _ := os.UserHomeDir()
-	botdFilePath := fmt.Sprintf("%s/.birdboard/botd.json", homeDir)
-
 	pastBotd := GetPastBotd()
 
-	f, err := os.Create(botdFilePath)
+	f, err := os.Create(config.BotdFilePath())
 	if err != nil {
 		fmt.Println(err)
 	}

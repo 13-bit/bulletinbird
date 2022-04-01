@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/13-bit/birdboard/internal/config"
 	"github.com/bits-and-blooms/bloom/v3"
 )
 
@@ -17,16 +18,13 @@ type Taxon struct {
 }
 
 func ResetBotd() {
-	homeDir, _ := os.UserHomeDir()
-	botdFilePath := fmt.Sprintf("%s/.birdboard/botd.json", homeDir)
-
 	fmt.Println("Resetting BOTD...")
 
 	pastBotd := bloom.NewWithEstimates(13000, 0.01)
 
 	fmt.Println("Saving BOTD...")
 
-	f, err := os.Create(botdFilePath)
+	f, err := os.Create(config.BotdFilePath())
 	if err != nil {
 		fmt.Println(err)
 	}

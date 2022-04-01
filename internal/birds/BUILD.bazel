@@ -5,4 +5,5 @@ go_library(
     srcs = ["birds.go"],
     importpath = "github.com/13-bit/birdboard/internal/birds",
     visibility = ["//:__subpackages__"],
+    deps = ["//internal/config"],
 )
