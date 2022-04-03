@@ -1,17 +1,41 @@
 package main
 
 import (
-	"fmt"
+	"encoding/json"
+	"log"
+	"net/http"
 
 	"github.com/13-bit/birdboard/internal/botd"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
-type Configuration struct {
-	EbirdToken string
+func main() {
+	// Echo instance
+	e := echo.New()
+
+	// Middleware
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+
+	// Routes
+	e.GET("/", hello)
+	e.GET("/botd", birdOfTheDay)
+
+	// Start server
+	e.Logger.Fatal(e.Start(":1313"))
 }
 
-func main() {
-	fmt.Println("Welcome to Birdboard!")
+// Handler
+func hello(c echo.Context) error {
+	return c.String(http.StatusOK, "Welcome to Birdboard!")
+}
 
-	botd.BirdOfTheDay()
+func birdOfTheDay(c echo.Context) error {
+	botdJson, err := json.Marshal(botd.BirdOfTheDay())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return c.String(http.StatusOK, string(botdJson))
 }

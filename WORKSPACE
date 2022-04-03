@@ -85,15 +85,15 @@ go_repository(
 go_repository(
     name = "org_golang_x_net",
     importpath = "golang.org/x/net",
-    sum = "h1:/6y1LfuqNuQdHAm0jjtPtgRcxIxjVZgm5OTu8/QhZvk=",
-    version = "v0.0.0-20210916014120-12bc252f5db8",
+    sum = "h1:OfiFi4JbukWwe3lzw+xunroH1mnC1e2Gy5cxNJApiSY=",
+    version = "v0.0.0-20211015210444-4f30a5c0130f",
 )
 
 go_repository(
     name = "org_golang_x_sys",
     importpath = "golang.org/x/sys",
-    sum = "h1:b3NXsE2LusjYGGjL5bxEVZZORm/YEFFrWFjR8eFrw/c=",
-    version = "v0.0.0-20210423082822-04245dca01da",
+    sum = "h1:1VkfZQv42XQlA/jchYumAnv1UPo6RgF9rJFkTgZIxO4=",
+    version = "v0.0.0-20211103235746-7861aae1554b",
 )
 
 go_repository(
@@ -106,8 +106,8 @@ go_repository(
 go_repository(
     name = "org_golang_x_text",
     importpath = "golang.org/x/text",
-    sum = "h1:aRYxNxv6iGQlyVaZmk6ZgYEDa+Jg18DxebPSrd6bg1M=",
-    version = "v0.3.6",
+    sum = "h1:olpwvP2KacW1ZWvsR7uQhoyTYvKAupfQrRGBFM352Gk=",
+    version = "v0.3.7",
 )
 
 go_repository(
@@ -169,8 +169,8 @@ go_repository(
 go_repository(
     name = "com_github_davecgh_go_spew",
     importpath = "github.com/davecgh/go-spew",
-    sum = "h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=",
-    version = "v1.1.0",
+    sum = "h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=",
+    version = "v1.1.1",
 )
 
 go_repository(
@@ -288,8 +288,8 @@ go_repository(
 go_repository(
     name = "com_github_stretchr_testify",
     importpath = "github.com/stretchr/testify",
-    sum = "h1:hDPOHmpOpP40lSULcqw7IrRb/u7w6RpDC9399XyoNd0=",
-    version = "v1.6.1",
+    sum = "h1:nwc3DEeHmmLAfoZucVR881uASk0Mfjw8xYJ99tb5CcY=",
+    version = "v1.7.0",
 )
 
 go_repository(
@@ -337,8 +337,8 @@ go_repository(
 go_repository(
     name = "org_golang_x_crypto",
     importpath = "golang.org/x/crypto",
-    sum = "h1:psW17arqaxU48Z5kZ0CQnkZWQJsqcURM6tKiBApRjXI=",
-    version = "v0.0.0-20200622213623-75b288015ac9",
+    sum = "h1:HWj/xjIHfjYU5nVXpTM0s39J9CbLn7Cc5a7IC5rwsMQ=",
+    version = "v0.0.0-20210817164053-32db794688a5",
 )
 
 go_repository(
@@ -386,8 +386,78 @@ go_repository(
 go_repository(
     name = "in_gopkg_yaml_v3",
     importpath = "gopkg.in/yaml.v3",
-    sum = "h1:dUUwHk2QECo/6vqA44rthZ8ie2QXMNeKRTHCNY2nXvo=",
-    version = "v3.0.0-20200313102051-9f266ea9e77c",
+    sum = "h1:h8qDotaEPuJATrMmW04NCwg7v22aHH28wwpauUhK9Oo=",
+    version = "v3.0.0-20210107192922-496545a6307b",
+)
+
+go_repository(
+    name = "com_github_golang_jwt_jwt",
+    importpath = "github.com/golang-jwt/jwt",
+    sum = "h1:IfV12K8xAKAnZqdXVzCZ+TOjboZ2keLg81eXfW3O+oY=",
+    version = "v3.2.2+incompatible",
+)
+
+go_repository(
+    name = "com_github_labstack_echo_v4",
+    importpath = "github.com/labstack/echo/v4",
+    sum = "h1:Kv2/p8OaQ+M6Ex4eGimg9b9e6icoxA42JSlOR3msKtI=",
+    version = "v4.7.2",
+)
+
+go_repository(
+    name = "com_github_labstack_gommon",
+    importpath = "github.com/labstack/gommon",
+    sum = "h1:OomWaJXm7xR6L1HmEtGyQf26TEn7V6X88mktX9kee9o=",
+    version = "v0.3.1",
+)
+
+go_repository(
+    name = "com_github_mattn_go_colorable",
+    importpath = "github.com/mattn/go-colorable",
+    sum = "h1:nQ+aFkoE2TMGc0b68U2OKSexC+eq46+XwZzWXHRmPYs=",
+    version = "v0.1.11",
+)
+
+go_repository(
+    name = "com_github_mattn_go_isatty",
+    importpath = "github.com/mattn/go-isatty",
+    sum = "h1:yVuAays6BHfxijgZPzw+3Zlu5yQgKGP2/hcQbHb7S9Y=",
+    version = "v0.0.14",
+)
+
+go_repository(
+    name = "com_github_valyala_bytebufferpool",
+    importpath = "github.com/valyala/bytebufferpool",
+    sum = "h1:GqA5TC/0021Y/b9FG4Oi9Mr3q7XYx6KllzawFIhcdPw=",
+    version = "v1.0.0",
+)
+
+go_repository(
+    name = "com_github_valyala_fasttemplate",
+    importpath = "github.com/valyala/fasttemplate",
+    sum = "h1:TVEnxayobAdVkhQfrfes2IzOB6o+z4roRkPF52WA1u4=",
+    version = "v1.2.1",
+)
+
+go_repository(
+    name = "org_golang_x_time",
+    importpath = "golang.org/x/time",
+    sum = "h1:Hir2P/De0WpUhtrKGGjvSb2YxUgyZ7EFOSLIcSSpiwE=",
+    version = "v0.0.0-20201208040808-7e3f01d25324",
+)
+
+go_repository(
+    name = "com_github_dgrijalva_jwt_go",
+    importpath = "github.com/dgrijalva/jwt-go",
+    sum = "h1:7qlOGliEKZXTDg6OTjfoBKDXWrumCAMpl/TFQ4/5kLM=",
+    version = "v3.2.0+incompatible",
+)
+
+go_repository(
+    name = "com_github_labstack_echo",
+    importpath = "github.com/labstack/echo",
+    sum = "h1:pGRcYk231ExFAyoAjAfD85kQzRJCRI8bbnE7CX5OEgg=",
+    version = "v3.3.10+incompatible",
 )
 
 go_rules_dependencies()
