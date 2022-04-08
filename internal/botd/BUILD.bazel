@@ -8,5 +8,7 @@ go_library(
     deps = [
         "//internal/birds",
         "//internal/config",
+        "@com_github_cavaliergopher_grab_v3//:grab",
+        "@com_github_disintegration_imaging//:imaging",
     ],
 )
