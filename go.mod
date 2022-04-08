@@ -7,6 +7,7 @@ require (
 	github.com/cavaliergopher/grab/v3 v3.0.1
 	github.com/disintegration/imaging v1.6.2
 	github.com/labstack/echo/v4 v4.7.2
+	github.com/makeworld-the-better-one/dither/v2 v2.2.0
 )
 
 require (

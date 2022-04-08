@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"image"
+	"image/color"
 	"log"
 	"os"
 	"time"
@@ -12,6 +13,7 @@ import (
 	"github.com/13-bit/birdboard/internal/config"
 	"github.com/cavaliergopher/grab/v3"
 	"github.com/disintegration/imaging"
+	"github.com/makeworld-the-better-one/dither/v2"
 )
 
 type BirdOfTheDay struct {
@@ -115,7 +117,20 @@ func processBotdImage() {
 		fmt.Println(err)
 	}
 
-	botdImageResized := imaging.Resize(botdImage, 0, 100, imaging.Box)
+	palette := []color.Color{
+		color.Black,
+		color.White,
+	}
+
+	// Create ditherer
+	d := dither.NewDitherer(palette)
+	d.Matrix = dither.Atkinson
+
+	// Dither the image, attempting to modify the existing image
+	// If it can't then a dithered copy will be returned.
+	botdImageDithered := d.Dither(botdImage)
+
+	botdImageResized := imaging.Resize(botdImageDithered, 0, 100, imaging.Box)
 
 	err = imaging.Save(botdImageResized, config.BotdImageFilePath())
 	if err != nil {
