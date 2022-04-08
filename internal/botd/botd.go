@@ -14,6 +14,7 @@ import (
 	"github.com/cavaliergopher/grab/v3"
 	"github.com/disintegration/imaging"
 	"github.com/makeworld-the-better-one/dither/v2"
+	qrcode "github.com/skip2/go-qrcode"
 )
 
 type BirdOfTheDay struct {
@@ -38,6 +39,7 @@ func nextBirdOfTheDay() BirdOfTheDay {
 	SaveBotd(botd)
 	downloadBotdImage(botd)
 	processBotdImage()
+	generateQrCode(botd)
 
 	return botd
 }
@@ -124,17 +126,21 @@ func processBotdImage() {
 		color.Gray16{0xffff},
 	}
 
-	// Create ditherer
 	d := dither.NewDitherer(palette)
 	d.Matrix = dither.Atkinson
 
-	// Dither the image, attempting to modify the existing image
-	// If it can't then a dithered copy will be returned.
 	botdImageDithered := d.Dither(botdImage)
 
 	botdImageResized := imaging.Resize(botdImageDithered, 0, 100, imaging.Box)
 
 	err = imaging.Save(botdImageResized, config.BotdImageFilePath())
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
+func generateQrCode(botd BirdOfTheDay) {
+	err := qrcode.WriteFile(botd.Bird.GuideUrl, qrcode.Medium, 128, config.QrCodeFilePath())
 	if err != nil {
 		fmt.Println(err)
 	}

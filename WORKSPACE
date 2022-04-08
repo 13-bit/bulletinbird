@@ -488,6 +488,13 @@ go_repository(
     version = "v2.2.0",
 )
 
+go_repository(
+    name = "com_github_skip2_go_qrcode",
+    importpath = "github.com/skip2/go-qrcode",
+    sum = "h1:MRM5ITcdelLK2j1vwZ3Je0FKVCfqOLp5zO6trqMLYs0=",
+    version = "v0.0.0-20200617195104-da1b6568686e",
+)
+
 go_rules_dependencies()
 
 go_register_toolchains(version = "1.18")

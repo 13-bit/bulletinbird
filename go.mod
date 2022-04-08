@@ -8,6 +8,7 @@ require (
 	github.com/disintegration/imaging v1.6.2
 	github.com/labstack/echo/v4 v4.7.2
 	github.com/makeworld-the-better-one/dither/v2 v2.2.0
+	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 )
 
 require (
