@@ -34,6 +34,8 @@ func nextBirdOfTheDay() BirdOfTheDay {
 	}
 
 	SaveBotd(botd)
+	downloadBotdImage(botd)
+	processBotdImage()
 
 	return botd
 }
@@ -71,9 +73,6 @@ func GetBirdOfTheDay() birds.Bird {
 	}
 
 	fmt.Printf("%+v\n", botd.Bird)
-
-	downloadBotdImage(botd)
-	processBotdImage()
 
 	return botd.Bird
 }
@@ -116,7 +115,7 @@ func processBotdImage() {
 		fmt.Println(err)
 	}
 
-	botdImageResized := imaging.Resize(botdImage, 0, 100, imaging.Lanczos)
+	botdImageResized := imaging.Resize(botdImage, 0, 100, imaging.Box)
 
 	err = imaging.Save(botdImageResized, config.BotdImageFilePath())
 	if err != nil {
