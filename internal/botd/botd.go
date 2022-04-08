@@ -118,8 +118,10 @@ func processBotdImage() {
 	}
 
 	palette := []color.Color{
-		color.Black,
-		color.White,
+		color.Gray16{0},
+		color.Gray16{0x400f},
+		color.Gray16{0x7fff},
+		color.Gray16{0xffff},
 	}
 
 	// Create ditherer
