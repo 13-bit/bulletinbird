@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/13-bit/birdboard/internal/botd"
+	"github.com/13-bit/birdboard/internal/config"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -21,6 +22,8 @@ func main() {
 	// Routes
 	e.GET("/", hello)
 	e.GET("/botd", birdOfTheDay)
+
+	e.Static("/static", config.StaticPath())
 
 	// Start server
 	e.Logger.Fatal(e.Start(":1313"))

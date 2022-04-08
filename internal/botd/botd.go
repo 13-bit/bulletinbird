@@ -92,12 +92,12 @@ func isTodaysBotd(botdTime time.Time) bool {
 func downloadBotdImage(botd BirdOfTheDay) {
 	fmt.Println("downloading image...")
 
-	err := os.Remove(config.BotdImageDownloadFilePath())
+	err := os.Remove(config.BotdImageFilePath())
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	resp, err := grab.Get(config.BotdImageDownloadFilePath(), botd.Bird.ImgUrl)
+	resp, err := grab.Get(config.BotdImageFilePath(), botd.Bird.ImgUrl)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -108,7 +108,7 @@ func downloadBotdImage(botd BirdOfTheDay) {
 func processBotdImage() {
 	fmt.Println("processing image...")
 
-	botdFile, err := os.Open(config.BotdImageDownloadFilePath())
+	botdFile, err := os.Open(config.BotdImageFilePath())
 	if err != nil {
 		log.Fatal(err)
 	}
