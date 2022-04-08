@@ -32,7 +32,7 @@ func hello(c echo.Context) error {
 }
 
 func birdOfTheDay(c echo.Context) error {
-	botdJson, err := json.Marshal(botd.BirdOfTheDay())
+	botdJson, err := json.Marshal(botd.GetBirdOfTheDay())
 	if err != nil {
 		log.Fatal(err)
 	}

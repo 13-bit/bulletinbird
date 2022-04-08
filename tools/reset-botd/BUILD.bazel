@@ -5,7 +5,11 @@ go_library(
     srcs = ["reset-botd.go"],
     importpath = "github.com/13-bit/birdboard/tools/reset-botd",
     visibility = ["//visibility:private"],
-    deps = ["//internal/birds"],
+    deps = [
+        "//internal/birds",
+        "//internal/botd",
+        "//internal/config",
+    ],
 )
 
 go_binary(

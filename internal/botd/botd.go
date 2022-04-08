@@ -11,12 +11,12 @@ import (
 	"github.com/13-bit/birdboard/internal/config"
 )
 
-type birdOfTheDay struct {
+type BirdOfTheDay struct {
 	Bird        birds.Bird `json:"bird"`
 	LastUpdated time.Time  `json:"lastUpdated"`
 }
 
-func nextBirdOfTheDay() birdOfTheDay {
+func nextBirdOfTheDay() BirdOfTheDay {
 	birdList := birds.GetBirdList()
 
 	front := birdList.Front()
@@ -25,17 +25,17 @@ func nextBirdOfTheDay() birdOfTheDay {
 	birdList.Remove(front)
 	birds.SaveBirdList(birdList)
 
-	botd := birdOfTheDay{
+	botd := BirdOfTheDay{
 		Bird:        bird,
 		LastUpdated: time.Now(),
 	}
 
-	saveBotd(botd)
+	SaveBotd(botd)
 
 	return botd
 }
 
-func saveBotd(botd birdOfTheDay) {
+func SaveBotd(botd BirdOfTheDay) {
 	f, err := os.Create(config.BotdFilePath())
 	if err != nil {
 		log.Fatal(err)
@@ -48,7 +48,7 @@ func saveBotd(botd birdOfTheDay) {
 	f.Write(botdJson)
 }
 
-func BirdOfTheDay() birds.Bird {
+func GetBirdOfTheDay() birds.Bird {
 	f, err := os.Open(config.BotdFilePath())
 	if err != nil {
 		log.Fatal(err)
@@ -56,9 +56,7 @@ func BirdOfTheDay() birds.Bird {
 
 	defer f.Close()
 
-	var botd birdOfTheDay
-
-	fmt.Println("file opened")
+	var botd BirdOfTheDay
 
 	err = json.NewDecoder(f).Decode(&botd)
 	if err != nil {
@@ -68,8 +66,6 @@ func BirdOfTheDay() birds.Bird {
 	if !isTodaysBotd(botd.LastUpdated) {
 		botd = nextBirdOfTheDay()
 	}
-
-	fmt.Println("json decoded")
 
 	fmt.Printf("%+v\n", botd.Bird)
 

@@ -460,6 +460,13 @@ go_repository(
     version = "v3.3.10+incompatible",
 )
 
+go_repository(
+    name = "com_github_cavaliergopher_grab_v3",
+    importpath = "github.com/cavaliergopher/grab/v3",
+    sum = "h1:4z7TkBfmPjmLAAmkkAZNX/6QJ1nNFdv3SdIHXju0Fr4=",
+    version = "v3.0.1",
+)
+
 go_rules_dependencies()
 
 go_register_toolchains(version = "1.18")
