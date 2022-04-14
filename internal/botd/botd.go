@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"image"
-	"image/color"
 	"log"
 	"os"
 	"time"
@@ -13,7 +12,6 @@ import (
 	"github.com/13-bit/birdboard/internal/config"
 	"github.com/cavaliergopher/grab/v3"
 	"github.com/disintegration/imaging"
-	"github.com/makeworld-the-better-one/dither/v2"
 	qrcode "github.com/skip2/go-qrcode"
 )
 
@@ -92,12 +90,14 @@ func isTodaysBotd(botdTime time.Time) bool {
 func downloadBotdImage(botd BirdOfTheDay) {
 	fmt.Println("downloading image...")
 
-	err := os.Remove(config.BotdImageFilePath())
+	pngPath, _ := config.BotdImageFilePaths()
+
+	err := os.Remove(pngPath)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	resp, err := grab.Get(config.BotdImageFilePath(), botd.Bird.ImgUrl)
+	resp, err := grab.Get(pngPath, botd.Bird.ImgUrl)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -108,7 +108,9 @@ func downloadBotdImage(botd BirdOfTheDay) {
 func processBotdImage() {
 	fmt.Println("processing image...")
 
-	botdFile, err := os.Open(config.BotdImageFilePath())
+	pngPath, bmpPath := config.BotdImageFilePaths()
+
+	botdFile, err := os.Open(pngPath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -119,28 +121,41 @@ func processBotdImage() {
 		fmt.Println(err)
 	}
 
-	palette := []color.Color{
-		color.Gray16{0},
-		color.Gray16{0x400f},
-		color.Gray16{0x7fff},
-		color.Gray16{0xffff},
+	botdImageResized := imaging.Resize(botdImage, 0, 100, imaging.Box)
+	botdImageGrayscale := imaging.Grayscale(botdImageResized)
+
+	// palette := []color.Color{
+	// 	color.Gray16{0},
+	// 	color.Gray16{0x400f},
+	// 	color.Gray16{0x7fff},
+	// 	color.Gray16{0xffff},
+	// }
+
+	// d := dither.NewDitherer(palette)
+	// d.Matrix = dither.Atkinson
+
+	// botdImageDithered := d.Dither(botdImageGrayscale)
+
+	err = imaging.Save(botdImageGrayscale, pngPath)
+	if err != nil {
+		fmt.Println(err)
 	}
 
-	d := dither.NewDitherer(palette)
-	d.Matrix = dither.Atkinson
-
-	botdImageDithered := d.Dither(botdImage)
-
-	botdImageResized := imaging.Resize(botdImageDithered, 0, 100, imaging.Box)
-
-	err = imaging.Save(botdImageResized, config.BotdImageFilePath())
+	err = imaging.Save(botdImageGrayscale, bmpPath)
 	if err != nil {
 		fmt.Println(err)
 	}
 }
 
 func generateQrCode(botd BirdOfTheDay) {
-	err := qrcode.WriteFile(botd.Bird.GuideUrl, qrcode.Medium, 128, config.QrCodeFilePath())
+	pngPath, bmpPath := config.QrCodeFilePaths()
+
+	err := qrcode.WriteFile(botd.Bird.GuideUrl, qrcode.Low, 40, pngPath)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	err = qrcode.WriteFile(botd.Bird.GuideUrl, qrcode.Low, 40, bmpPath)
 	if err != nil {
 		fmt.Println(err)
 	}
