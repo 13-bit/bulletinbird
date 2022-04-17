@@ -20,6 +20,11 @@ func BirdListFilePath() string {
 	return fmt.Sprintf("%s/.birdboard/birdlist.json", homeDir)
 }
 
+func BotdImageDownloadPath() string {
+	homeDir, _ := os.UserHomeDir()
+	return fmt.Sprintf("%s/.birdboard/botd.png", homeDir)
+}
+
 func BotdImageFilePaths() (string, string) {
 	homeDir, _ := os.UserHomeDir()
 	return fmt.Sprintf("%s/.birdboard/static/botd.png", homeDir), fmt.Sprintf("%s/.birdboard/static/botd.bmp", homeDir)

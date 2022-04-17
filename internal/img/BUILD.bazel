@@ -1,0 +1,8 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "img",
+    srcs = ["img.go"],
+    importpath = "github.com/13-bit/birdboard/internal/img",
+    visibility = ["//:__subpackages__"],
+)

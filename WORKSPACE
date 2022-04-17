@@ -495,6 +495,13 @@ go_repository(
     version = "v0.0.0-20200617195104-da1b6568686e",
 )
 
+go_repository(
+    name = "com_github_makeworld_the_better_one_dither",
+    importpath = "github.com/makeworld-the-better-one/dither",
+    sum = "h1:sBZdGV4o6MG6UMMRJhzDhruwlt99yQe0ChwgL29LMWg=",
+    version = "v1.0.0",
+)
+
 go_rules_dependencies()
 
 go_register_toolchains(version = "1.18")

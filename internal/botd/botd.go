@@ -10,6 +10,7 @@ import (
 
 	"github.com/13-bit/birdboard/internal/birds"
 	"github.com/13-bit/birdboard/internal/config"
+	"github.com/13-bit/birdboard/internal/img"
 	"github.com/cavaliergopher/grab/v3"
 	"github.com/disintegration/imaging"
 	qrcode "github.com/skip2/go-qrcode"
@@ -90,14 +91,14 @@ func isTodaysBotd(botdTime time.Time) bool {
 func downloadBotdImage(botd BirdOfTheDay) {
 	fmt.Println("downloading image...")
 
-	pngPath, _ := config.BotdImageFilePaths()
+	botdPath := config.BotdImageDownloadPath()
 
-	err := os.Remove(pngPath)
+	err := os.Remove(botdPath)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	resp, err := grab.Get(pngPath, botd.Bird.ImgUrl)
+	resp, err := grab.Get(botdPath, botd.Bird.ImgUrl)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -108,9 +109,10 @@ func downloadBotdImage(botd BirdOfTheDay) {
 func processBotdImage() {
 	fmt.Println("processing image...")
 
+	botdPath := config.BotdImageDownloadPath()
 	pngPath, bmpPath := config.BotdImageFilePaths()
 
-	botdFile, err := os.Open(pngPath)
+	botdFile, err := os.Open(botdPath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -121,8 +123,8 @@ func processBotdImage() {
 		fmt.Println(err)
 	}
 
-	botdImageResized := imaging.Resize(botdImage, 0, 100, imaging.Box)
-	botdImageGrayscale := imaging.Grayscale(botdImageResized)
+	botdImageResized := imaging.Resize(botdImage, 100, 0, imaging.Box)
+	botdImageGrayscale := img.RgbaToGray(botdImageResized)
 
 	// palette := []color.Color{
 	// 	color.Gray16{0},
@@ -134,7 +136,7 @@ func processBotdImage() {
 	// d := dither.NewDitherer(palette)
 	// d.Matrix = dither.Atkinson
 
-	// botdImageDithered := d.Dither(botdImageGrayscale)
+	// _ = d.Dither(botdImageGrayscale)
 
 	err = imaging.Save(botdImageGrayscale, pngPath)
 	if err != nil {
