@@ -39,6 +39,7 @@ func nextBirdOfTheDay() BirdOfTheDay {
 	downloadBotdImage(botd)
 	processBotdImage()
 	generateQrCode(botd)
+	processQrCodeImage()
 
 	return botd
 }
@@ -123,8 +124,8 @@ func processBotdImage() {
 		fmt.Println(err)
 	}
 
-	botdImageResized := imaging.Resize(botdImage, 100, 0, imaging.Box)
-	botdImageGrayscale := img.RgbaToGray(botdImageResized)
+	botdImage = imaging.Resize(botdImage, 100, 0, imaging.Box)
+	botdImage = img.RgbaToGray(botdImage)
 
 	// palette := []color.Color{
 	// 	color.Gray16{0},
@@ -136,28 +137,59 @@ func processBotdImage() {
 	// d := dither.NewDitherer(palette)
 	// d.Matrix = dither.Atkinson
 
-	// _ = d.Dither(botdImageGrayscale)
+	// botdImage = d.Dither(botdImage)
 
-	err = imaging.Save(botdImageGrayscale, pngPath)
+	err = imaging.Save(botdImage, pngPath)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	err = imaging.Save(botdImageGrayscale, bmpPath)
+	err = imaging.Save(botdImage, bmpPath)
 	if err != nil {
 		fmt.Println(err)
 	}
 }
 
 func generateQrCode(botd BirdOfTheDay) {
-	pngPath, bmpPath := config.QrCodeFilePaths()
+	qrPath := config.QrCodeImageDownloadPath()
 
-	err := qrcode.WriteFile(botd.Bird.GuideUrl, qrcode.Low, 40, pngPath)
+	err := qrcode.WriteFile(botd.Bird.GuideUrl, qrcode.Medium, 80, qrPath)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	err = qrcode.WriteFile(botd.Bird.GuideUrl, qrcode.Low, 40, bmpPath)
+	// err = qrcode.WriteFile(botd.Bird.GuideUrl, qrcode.Low, 60, bmpPath)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+}
+
+func processQrCodeImage() {
+	fmt.Println("processing image...")
+
+	qrPath := config.QrCodeImageDownloadPath()
+
+	pngPath, bmpPath := config.QrCodeImageFilePaths()
+
+	qrFile, err := os.Open(qrPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer qrFile.Close()
+
+	qrImage, _, err := image.Decode(qrFile)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	qrImage = img.RgbaToGray(qrImage)
+
+	err = imaging.Save(qrImage, pngPath)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	err = imaging.Save(qrImage, bmpPath)
 	if err != nil {
 		fmt.Println(err)
 	}
