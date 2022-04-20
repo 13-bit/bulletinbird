@@ -17,8 +17,9 @@ import (
 )
 
 type BirdOfTheDay struct {
-	Bird        birds.Bird `json:"bird"`
-	LastUpdated time.Time  `json:"lastUpdated"`
+	Bird          birds.Bird    `json:"bird"`
+	LastUpdated   time.Time     `json:"lastUpdated"`
+	UntilTomorrow time.Duration `json:"untilTomorrow"`
 }
 
 func nextBirdOfTheDay() BirdOfTheDay {
@@ -31,8 +32,9 @@ func nextBirdOfTheDay() BirdOfTheDay {
 	birds.SaveBirdList(birdList)
 
 	botd := BirdOfTheDay{
-		Bird:        bird,
-		LastUpdated: time.Now(),
+		Bird:          bird,
+		LastUpdated:   time.Now(),
+		UntilTomorrow: 0,
 	}
 
 	SaveBotd(botd)
@@ -57,7 +59,7 @@ func SaveBotd(botd BirdOfTheDay) {
 	f.Write(botdJson)
 }
 
-func GetBirdOfTheDay() birds.Bird {
+func GetBirdOfTheDay() BirdOfTheDay {
 	f, err := os.Open(config.BotdFilePath())
 	if err != nil {
 		log.Fatal(err)
@@ -76,9 +78,11 @@ func GetBirdOfTheDay() birds.Bird {
 		botd = nextBirdOfTheDay()
 	}
 
+	botd.UntilTomorrow = timeUntilTomorrow()
+
 	fmt.Printf("%+v\n", botd.Bird)
 
-	return botd.Bird
+	return botd
 }
 
 func isTodaysBotd(botdTime time.Time) bool {
@@ -193,4 +197,18 @@ func processQrCodeImage() {
 	if err != nil {
 		fmt.Println(err)
 	}
+}
+
+func tomorrow() time.Time {
+	loc, _ := time.LoadLocation("America/Chicago")
+	year, month, day := time.Now().In(loc).Date()
+	tomorrowMorning := time.Date(year, month, day+1, 5, 0, 0, 0, loc)
+
+	return tomorrowMorning
+}
+
+func timeUntilTomorrow() time.Duration {
+	tomorrowMorning := tomorrow()
+
+	return time.Duration(tomorrowMorning.Sub(time.Now()).Seconds())
 }
