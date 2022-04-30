@@ -16,12 +16,12 @@ func DownloadTaxonomyGuide() {
 
 	var taxonomy []birds.Bird
 
-	doc, err := goquery.NewDocument("https://www.allaboutbirds.org/guide/browse/taxonomy")
+	guideDoc, err := goquery.NewDocument("https://www.allaboutbirds.org/guide/browse/taxonomy")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	doc.Find(".species-card").Each(func(i int, s *goquery.Selection) {
+	guideDoc.Find(".species-card").Each(func(i int, s *goquery.Selection) {
 		commonName := s.Find(".species-info").Find("h4").Text()
 		scientificName := s.Find(".species-info").Find("p").Text()
 		guideRelativeUrl, _ := s.Find(".species-info").Find("h4").Find("a").Attr("href")
@@ -32,11 +32,25 @@ func DownloadTaxonomyGuide() {
 			imgUrl, _ = s.Find(".species-image").Find("a").Find("img").Attr("pre-src")
 		}
 
+		speciesDoc, err := goquery.NewDocument(guideUrl)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		var lifeHistoryImageUrls []string
+
+		speciesDoc.Find(".icon").Each(func(i int, s *goquery.Selection) {
+			icon, _ := s.Find("img").Attr("src")
+
+			lifeHistoryImageUrls = append(lifeHistoryImageUrls, fmt.Sprintf("https://www.allaboutbirds.org%s", icon))
+		})
+
 		bird := birds.Bird{}
 		bird.CommonName = commonName
 		bird.ScientificName = scientificName
 		bird.GuideUrl = guideUrl
 		bird.ImgUrl = imgUrl
+		bird.LifeHistoryImageUrls = lifeHistoryImageUrls[0:5]
 
 		taxonomy = append(taxonomy, bird)
 	})

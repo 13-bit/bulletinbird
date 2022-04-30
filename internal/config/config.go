@@ -30,6 +30,15 @@ func QrCodeImageDownloadPath() string {
 	return fmt.Sprintf("%s/.birdboard/qr.png", homeDir)
 }
 
+func LifeHistoryImageDownloadPaths() (string, string, string, string, string) {
+	homeDir, _ := os.UserHomeDir()
+	return fmt.Sprintf("%s/.birdboard/life-history-habitat.png", homeDir),
+		fmt.Sprintf("%s/.birdboard/life-history-food.png", homeDir),
+		fmt.Sprintf("%s/.birdboard/life-history-nesting.png", homeDir),
+		fmt.Sprintf("%s/.birdboard/life-history-behavior.png", homeDir),
+		fmt.Sprintf("%s/.birdboard/life-history-conservation.png", homeDir)
+}
+
 func BotdImageFilePaths() (string, string) {
 	homeDir, _ := os.UserHomeDir()
 	return fmt.Sprintf("%s/.birdboard/static/botd.png", homeDir), fmt.Sprintf("%s/.birdboard/static/botd.bmp", homeDir)
@@ -38,6 +47,11 @@ func BotdImageFilePaths() (string, string) {
 func QrCodeImageFilePaths() (string, string) {
 	homeDir, _ := os.UserHomeDir()
 	return fmt.Sprintf("%s/.birdboard/static/qr.png", homeDir), fmt.Sprintf("%s/.birdboard/static/qr.bmp", homeDir)
+}
+
+func LifeHistoryImagePaths() (string, string) {
+	homeDir, _ := os.UserHomeDir()
+	return fmt.Sprintf("%s/.birdboard/static/life-history.png", homeDir), fmt.Sprintf("%s/.birdboard/static/life-history.bmp", homeDir)
 }
 
 func StaticPath() string {

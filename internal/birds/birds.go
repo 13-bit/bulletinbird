@@ -15,10 +15,11 @@ import (
 )
 
 type Bird struct {
-	ScientificName string `json:"sciName"`
-	CommonName     string `json:"comName"`
-	GuideUrl       string `json:"guideUrl"`
-	ImgUrl         string `json:"imgUrl"`
+	ScientificName       string   `json:"sciName"`
+	CommonName           string   `json:"comName"`
+	GuideUrl             string   `json:"guideUrl"`
+	ImgUrl               string   `json:"imgUrl"`
+	LifeHistoryImageUrls []string `json:"lifeHistoryImageUrls"`
 }
 
 func GetTaxonomy() []Bird {

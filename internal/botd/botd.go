@@ -16,6 +16,8 @@ import (
 	qrcode "github.com/skip2/go-qrcode"
 )
 
+// var BOTD = BirdOfTheDay{}
+
 type BirdOfTheDay struct {
 	Bird          birds.Bird    `json:"bird"`
 	LastUpdated   time.Time     `json:"lastUpdated"`
@@ -42,6 +44,8 @@ func nextBirdOfTheDay() BirdOfTheDay {
 	processBotdImage()
 	generateQrCode(botd)
 	processQrCodeImage()
+	downloadLifeHistoryImages(botd)
+	processLifeHistoryImages()
 
 	return botd
 }
@@ -94,7 +98,7 @@ func isTodaysBotd(botdTime time.Time) bool {
 }
 
 func downloadBotdImage(botd BirdOfTheDay) {
-	fmt.Println("downloading image...")
+	fmt.Println("Downloading BOTD image...")
 
 	botdPath := config.BotdImageDownloadPath()
 
@@ -112,7 +116,7 @@ func downloadBotdImage(botd BirdOfTheDay) {
 }
 
 func processBotdImage() {
-	fmt.Println("processing image...")
+	fmt.Println("Processing image...")
 
 	botdPath := config.BotdImageDownloadPath()
 	pngPath, bmpPath := config.BotdImageFilePaths()
@@ -169,7 +173,7 @@ func generateQrCode(botd BirdOfTheDay) {
 }
 
 func processQrCodeImage() {
-	fmt.Println("processing image...")
+	fmt.Println("Processing QR code...")
 
 	qrPath := config.QrCodeImageDownloadPath()
 
@@ -197,6 +201,32 @@ func processQrCodeImage() {
 	if err != nil {
 		fmt.Println(err)
 	}
+}
+
+func downloadLifeHistoryImages(botd BirdOfTheDay) {
+	fmt.Println("Downloading life history images...")
+
+	habitatPath, foodPath, nestingPath, behaviorPath, conservationPath := config.LifeHistoryImageDownloadPaths()
+
+	lifeHistoryPaths := []string{habitatPath, foodPath, nestingPath, behaviorPath, conservationPath}
+
+	for index, path := range lifeHistoryPaths {
+		err := os.Remove(path)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		resp, err := grab.Get(path, botd.Bird.LifeHistoryImageUrls[index])
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println("Download saved to", resp.Filename)
+	}
+}
+
+func processLifeHistoryImages() {
+	fmt.Println("processing life history images...")
 }
 
 func tomorrow() time.Time {
