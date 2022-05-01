@@ -1,6 +1,7 @@
 package botd
 
 import (
+	"embed"
 	"encoding/json"
 	"fmt"
 	"image"
@@ -17,6 +18,9 @@ import (
 )
 
 // var BOTD = BirdOfTheDay{}
+
+//go:embed resources/*
+var resourcesFS embed.FS
 
 type BirdOfTheDay struct {
 	Bird          birds.Bird    `json:"bird"`
@@ -209,12 +213,23 @@ func downloadLifeHistoryImages(botd BirdOfTheDay) {
 }
 
 func processLifeHistoryImages() {
-	fmt.Println("processing life history images...")
+	fmt.Println("Processing life history images...")
 
-	lifeHistoryImage, err := imaging.Open(config.LifeHistoryTemplateImagePath())
+	botdFile, err := resourcesFS.Open("resources/life-history-template.png")
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer botdFile.Close()
+
+	lifeHistoryImage, _, err := image.Decode(botdFile)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	// lifeHistoryImage, err := imaging.Open(config.LifeHistoryTemplateImagePath())
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
 	habitatPath, foodPath, nestingPath, behaviorPath, _ := config.LifeHistoryImageDownloadPaths()
 
