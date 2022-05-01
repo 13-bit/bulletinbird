@@ -121,15 +121,9 @@ func processBotdImage() {
 	botdPath := config.BotdImageDownloadPath()
 	pngPath, bmpPath := config.BotdImageFilePaths()
 
-	botdFile, err := os.Open(botdPath)
+	botdImage, err := imaging.Open(botdPath)
 	if err != nil {
 		log.Fatal(err)
-	}
-	defer botdFile.Close()
-
-	botdImage, _, err := image.Decode(botdFile)
-	if err != nil {
-		fmt.Println(err)
 	}
 
 	botdImage = imaging.Resize(botdImage, 100, 0, imaging.Box)
@@ -165,11 +159,6 @@ func generateQrCode(botd BirdOfTheDay) {
 	if err != nil {
 		fmt.Println(err)
 	}
-
-	// err = qrcode.WriteFile(botd.Bird.GuideUrl, qrcode.Low, 60, bmpPath)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
 }
 
 func processQrCodeImage() {
@@ -179,15 +168,9 @@ func processQrCodeImage() {
 
 	pngPath, bmpPath := config.QrCodeImageFilePaths()
 
-	qrFile, err := os.Open(qrPath)
+	qrImage, err := imaging.Open(qrPath)
 	if err != nil {
 		log.Fatal(err)
-	}
-	defer qrFile.Close()
-
-	qrImage, _, err := image.Decode(qrFile)
-	if err != nil {
-		fmt.Println(err)
 	}
 
 	qrImage = img.RgbaToGray(qrImage)
@@ -227,6 +210,56 @@ func downloadLifeHistoryImages(botd BirdOfTheDay) {
 
 func processLifeHistoryImages() {
 	fmt.Println("processing life history images...")
+
+	lifeHistoryImage, err := imaging.Open(config.LifeHistoryTemplateImagePath())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	habitatPath, foodPath, nestingPath, behaviorPath, _ := config.LifeHistoryImageDownloadPaths()
+
+	habitatImage, err := imaging.Open(habitatPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	habitatImage = imaging.Resize(habitatImage, 36, 0, imaging.Box)
+
+	foodImage, err := imaging.Open(foodPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	foodImage = imaging.Resize(foodImage, 36, 0, imaging.Box)
+
+	nestingImage, err := imaging.Open(nestingPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	nestingImage = imaging.Resize(nestingImage, 36, 0, imaging.Box)
+
+	behaviorImage, err := imaging.Open(behaviorPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	behaviorImage = imaging.Resize(behaviorImage, 36, 0, imaging.Box)
+
+	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, habitatImage, image.Pt(0, 0), 255)
+	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, foodImage, image.Pt(40, 0), 255)
+	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, nestingImage, image.Pt(0, 40), 255)
+	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, behaviorImage, image.Pt(40, 40), 255)
+
+	lifeHistoryImage = img.RgbaToGray(lifeHistoryImage)
+
+	pngPath, bmpPath := config.LifeHistoryImagePaths()
+
+	err = imaging.Save(lifeHistoryImage, pngPath)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	err = imaging.Save(lifeHistoryImage, bmpPath)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
 func tomorrow() time.Time {

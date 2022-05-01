@@ -54,6 +54,11 @@ func LifeHistoryImagePaths() (string, string) {
 	return fmt.Sprintf("%s/.birdboard/static/life-history.png", homeDir), fmt.Sprintf("%s/.birdboard/static/life-history.bmp", homeDir)
 }
 
+func LifeHistoryTemplateImagePath() string {
+	homeDir, _ := os.UserHomeDir()
+	return fmt.Sprintf("%s/.birdboard/life-history-template.png", homeDir)
+}
+
 func StaticPath() string {
 	homeDir, _ := os.UserHomeDir()
 	return fmt.Sprintf("%s/.birdboard/static", homeDir)
