@@ -3,7 +3,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "botd",
     srcs = ["botd.go"],
-    embedsrcs = ["resources/life-history-template.png"],
+    embedsrcs = [
+        "resources/life-history-template.png",
+        "resources/botd-mask.png",
+    ],
     importpath = "github.com/13-bit/birdboard/internal/botd",
     visibility = ["//:__subpackages__"],
     deps = [

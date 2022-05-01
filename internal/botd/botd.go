@@ -130,7 +130,21 @@ func processBotdImage() {
 		log.Fatal(err)
 	}
 
+	maskFile, err := resourcesFS.Open("resources/botd-mask.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer maskFile.Close()
+
+	maskImage, _, err := image.Decode(maskFile)
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	botdImage = imaging.Resize(botdImage, 100, 0, imaging.Box)
+
+	botdImage = imaging.Overlay(botdImage, maskImage, image.Pt(0, 0), 255)
+
 	botdImage = img.RgbaToGray(botdImage)
 
 	// palette := []color.Color{
@@ -215,21 +229,16 @@ func downloadLifeHistoryImages(botd BirdOfTheDay) {
 func processLifeHistoryImages() {
 	fmt.Println("Processing life history images...")
 
-	botdFile, err := resourcesFS.Open("resources/life-history-template.png")
+	lifeHistoryFile, err := resourcesFS.Open("resources/life-history-template.png")
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer botdFile.Close()
+	defer lifeHistoryFile.Close()
 
-	lifeHistoryImage, _, err := image.Decode(botdFile)
+	lifeHistoryImage, _, err := image.Decode(lifeHistoryFile)
 	if err != nil {
 		fmt.Println(err)
 	}
-
-	// lifeHistoryImage, err := imaging.Open(config.LifeHistoryTemplateImagePath())
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
 
 	habitatPath, foodPath, nestingPath, behaviorPath, _ := config.LifeHistoryImageDownloadPaths()
 
