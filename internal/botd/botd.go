@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"image"
+	"image/color"
 	"log"
 	"os"
 	"time"
@@ -14,6 +15,7 @@ import (
 	"github.com/13-bit/birdboard/internal/img"
 	"github.com/cavaliergopher/grab/v3"
 	"github.com/disintegration/imaging"
+	"github.com/makeworld-the-better-one/dither"
 	qrcode "github.com/skip2/go-qrcode"
 )
 
@@ -139,21 +141,25 @@ func processBotdImage() {
 
 	botdImage = imaging.Resize(botdImage, 100, 0, imaging.Box)
 
+	palette := []color.Color{
+		color.RGBA{76, 76, 76, 255},
+		color.RGBA{132, 132, 132, 255},
+		color.RGBA{221, 221, 221, 255},
+		color.RGBA{188, 188, 188, 255},
+	}
+
+	d := dither.NewDitherer(palette)
+	d.Matrix = dither.Atkinson
+
+	botdImageDithered := d.Dither(botdImage)
+
+	if botdImageDithered != nil {
+		botdImage = botdImageDithered
+	}
+
 	botdImage = imaging.Overlay(botdImage, maskImage, image.Pt(0, 0), 255)
 
 	botdImage = img.RgbaToGray(botdImage)
-
-	// palette := []color.Color{
-	// 	color.Gray16{0},
-	// 	color.Gray16{0x400f},
-	// 	color.Gray16{0x7fff},
-	// 	color.Gray16{0xffff},
-	// }
-
-	// d := dither.NewDitherer(palette)
-	// d.Matrix = dither.Atkinson
-
-	// botdImage = d.Dither(botdImage)
 
 	err = imaging.Save(botdImage, pngPath)
 	if err != nil {

@@ -15,6 +15,7 @@ go_library(
         "//internal/img",
         "@com_github_cavaliergopher_grab_v3//:grab",
         "@com_github_disintegration_imaging//:imaging",
+        "@com_github_makeworld_the_better_one_dither//:dither",
         "@com_github_skip2_go_qrcode//:go-qrcode",
     ],
 )
