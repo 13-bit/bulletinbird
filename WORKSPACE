@@ -365,8 +365,8 @@ go_repository(
 go_repository(
     name = "org_golang_x_sync",
     importpath = "golang.org/x/sync",
-    sum = "h1:8gQV6CLnAEikrhgkHFbMAEhagSSnXWGV915qUMm9mrU=",
-    version = "v0.0.0-20190423024810-112230192c58",
+    sum = "h1:5KslGYwFpkhGh+Q16bwMP3cOontH8FOep7tGV86Y7SQ=",
+    version = "v0.0.0-20210220032951-036812b2e83c",
 )
 
 go_repository(
@@ -500,6 +500,20 @@ go_repository(
     importpath = "github.com/makeworld-the-better-one/dither",
     sum = "h1:sBZdGV4o6MG6UMMRJhzDhruwlt99yQe0ChwgL29LMWg=",
     version = "v1.0.0",
+)
+
+go_repository(
+    name = "com_github_go_co_op_gocron",
+    importpath = "github.com/go-co-op/gocron",
+    sum = "h1:BjkuNImPy5NuIPEifhWItFG7pYyr27cyjS6BN9w/D4c=",
+    version = "v1.13.0",
+)
+
+go_repository(
+    name = "com_github_robfig_cron_v3",
+    importpath = "github.com/robfig/cron/v3",
+    sum = "h1:WdRxkvbJztn8LMz/QEvLN5sBU+xKpSqwwUO1Pjr4qDs=",
+    version = "v3.0.1",
 )
 
 go_rules_dependencies()

@@ -8,6 +8,7 @@ go_library(
     deps = [
         "//internal/botd",
         "//internal/config",
+        "@com_github_go_co_op_gocron//:gocron",
         "@com_github_labstack_echo_v4//:echo",
         "@com_github_labstack_echo_v4//middleware",
     ],

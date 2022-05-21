@@ -4,14 +4,29 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/13-bit/birdboard/internal/botd"
 	"github.com/13-bit/birdboard/internal/config"
+	"github.com/go-co-op/gocron"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
+	// Load the BOTD
+	botd.LoadBotd()
+
+	// Update the BOTD every day at midnight
+	loc, _ := time.LoadLocation("America/Chicago")
+	s := gocron.NewScheduler(loc)
+
+	s.Every(1).Day().At("00:01").Do(func() {
+		botd.UpdateBotd()
+	})
+
+	s.StartAsync()
+
 	// Echo instance
 	e := echo.New()
 
@@ -35,7 +50,7 @@ func hello(c echo.Context) error {
 }
 
 func birdOfTheDay(c echo.Context) error {
-	botdJson, err := json.Marshal(botd.GetBirdOfTheDay())
+	botdJson, err := json.Marshal(botd.BirdOfTheDay())
 	if err != nil {
 		log.Fatal(err)
 	}

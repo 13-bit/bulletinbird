@@ -3,11 +3,13 @@ package botd
 import (
 	"embed"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"image"
 	"image/color"
 	"log"
 	"os"
+	"sync"
 	"time"
 
 	"github.com/13-bit/birdboard/internal/birds"
@@ -19,17 +21,48 @@ import (
 	qrcode "github.com/skip2/go-qrcode"
 )
 
-// var BOTD = BirdOfTheDay{}
-
 //go:embed resources/*
 var resourcesFS embed.FS
 
-type BirdOfTheDay struct {
+var lock = &sync.Mutex{}
+
+type Botd struct {
 	Bird        birds.Bird `json:"bird"`
 	LastUpdated time.Time  `json:"lastUpdated"`
 }
 
-func nextBirdOfTheDay() BirdOfTheDay {
+var (
+	botd Botd
+)
+
+func BirdOfTheDay() Botd {
+
+	lock.Lock()
+	defer lock.Unlock()
+
+	if !isTodaysBotd(botd.LastUpdated) {
+		LoadBotd()
+	}
+
+	return botd
+}
+
+func UpdateBotd() error {
+	lock.Lock()
+	defer lock.Unlock()
+
+	if !isTodaysBotd(botd.LastUpdated) {
+		botd = nextBotd()
+	} else {
+		return errors.New("BOTD is already up to date")
+	}
+
+	fmt.Printf("%+v\n", botd.Bird)
+
+	return nil
+}
+
+func nextBotd() Botd {
 	birdList := birds.GetBirdList()
 
 	front := birdList.Front()
@@ -38,7 +71,7 @@ func nextBirdOfTheDay() BirdOfTheDay {
 	birdList.Remove(front)
 	birds.SaveBirdList(birdList)
 
-	botd := BirdOfTheDay{
+	botd := Botd{
 		Bird:        bird,
 		LastUpdated: time.Now(),
 	}
@@ -54,7 +87,7 @@ func nextBirdOfTheDay() BirdOfTheDay {
 	return botd
 }
 
-func SaveBotd(botd BirdOfTheDay) {
+func SaveBotd(botd Botd) {
 	f, err := os.Create(config.BotdFilePath())
 	if err != nil {
 		log.Fatal(err)
@@ -67,7 +100,7 @@ func SaveBotd(botd BirdOfTheDay) {
 	f.Write(botdJson)
 }
 
-func GetBirdOfTheDay() BirdOfTheDay {
+func LoadBotd() {
 	f, err := os.Open(config.BotdFilePath())
 	if err != nil {
 		log.Fatal(err)
@@ -75,20 +108,16 @@ func GetBirdOfTheDay() BirdOfTheDay {
 
 	defer f.Close()
 
-	var botd BirdOfTheDay
-
 	err = json.NewDecoder(f).Decode(&botd)
 	if err != nil {
-		botd = nextBirdOfTheDay()
+		botd = nextBotd()
 	}
 
 	if !isTodaysBotd(botd.LastUpdated) {
-		botd = nextBirdOfTheDay()
+		botd = nextBotd()
 	}
 
 	fmt.Printf("%+v\n", botd.Bird)
-
-	return botd
 }
 
 func isTodaysBotd(botdTime time.Time) bool {
@@ -99,7 +128,7 @@ func isTodaysBotd(botdTime time.Time) bool {
 	return botdTime.After(midnight)
 }
 
-func downloadBotdImage(botd BirdOfTheDay) {
+func downloadBotdImage(botd Botd) {
 	fmt.Println("Downloading BOTD image...")
 
 	botdPath := config.BotdImageDownloadPath()
@@ -172,7 +201,7 @@ func processBotdImage() {
 	}
 }
 
-func generateQrCode(botd BirdOfTheDay) {
+func generateQrCode(botd Botd) {
 	qrPath := config.QrCodeImageDownloadPath()
 
 	err := qrcode.WriteFile(botd.Bird.GuideUrl, qrcode.Medium, 80, qrPath)
@@ -206,7 +235,7 @@ func processQrCodeImage() {
 	}
 }
 
-func downloadLifeHistoryImages(botd BirdOfTheDay) {
+func downloadLifeHistoryImages(botd Botd) {
 	fmt.Println("Downloading life history images...")
 
 	habitatPath, foodPath, nestingPath, behaviorPath, conservationPath := config.LifeHistoryImageDownloadPaths()

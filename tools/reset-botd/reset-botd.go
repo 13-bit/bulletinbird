@@ -26,7 +26,7 @@ func ResetBotd() {
 
 	b := birds.Bird{}
 	ts, _ := time.Parse(time.RFC3339, "0001-01-01T00:00:00Z")
-	emptyBotd := botd.BirdOfTheDay{
+	emptyBotd := botd.Botd{
 		Bird:        b,
 		LastUpdated: ts,
 	}
