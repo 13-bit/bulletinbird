@@ -19,6 +19,7 @@ type Bird struct {
 	CommonName           string   `json:"comName"`
 	GuideUrl             string   `json:"guideUrl"`
 	ImgUrl               string   `json:"imgUrl"`
+	IllustrationUrl      string   `json:"illustrationUrl"`
 	LifeHistoryImageUrls []string `json:"lifeHistoryImageUrls"`
 }
 

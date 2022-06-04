@@ -3,7 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/13-bit/birdboard/internal/birds"
@@ -11,8 +13,100 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func DownloadTaxonomyGuide() {
+type BirdClass struct {
+	TaxonCode string `json:"taxonCode"`
+	Category  string `json:"category"`
+	SciName   string `json:"sciName"`
+	ComName   string `json:"comName"`
+	SubTaxa   []struct {
+		TaxonCode string `json:"taxonCode"`
+		Category  string `json:"category"`
+		SciName   string `json:"sciName"`
+		ComName   string `json:"comName"`
+		SubTaxa   []struct {
+			TaxonCode string `json:"taxonCode"`
+			Category  string `json:"category"`
+			SciName   string `json:"sciName"`
+			ComName   string `json:"comName"`
+		} `json:"subTaxa"`
+	} `json:"subTaxa"`
+}
+
+type BirdFamily struct {
+	TaxonCode string `json:"taxonCode"`
+	Category  string `json:"category"`
+	SciName   string `json:"sciName"`
+	ComName   string `json:"comName"`
+	SubTaxa   []struct {
+		TaxonCode string `json:"taxonCode"`
+		Category  string `json:"category"`
+		SciName   string `json:"sciName"`
+		ComName   string `json:"comName"`
+		SubTaxa   []struct {
+			TaxonCode    string `json:"taxonCode"`
+			Category     string `json:"category"`
+			SciName      string `json:"sciName"`
+			ComName      string `json:"comName"`
+			IucnStatus   string `json:"iucnStatus"`
+			IllusAssetID string `json:"illusAssetId"`
+		} `json:"subTaxa,omitempty"`
+	} `json:"subTaxa"`
+}
+
+func fetchBirdFamilies() []string {
+	resp, err := http.Get("https://birdsoftheworld.org/bow/api/v1/taxonomy?depth=2&categoriesForCounts=species&showIucnStatusCounts=true&regionFilterId=US&locale=en")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	defer resp.Body.Close()
+	bodyBytes, _ := ioutil.ReadAll(resp.Body)
+
+	var bc BirdClass
+	json.Unmarshal(bodyBytes, &bc)
+
+	var families []string
+
+	for _, orders := range bc.SubTaxa {
+		for _, family := range orders.SubTaxa {
+			families = append(families, family.TaxonCode)
+		}
+	}
+
+	return families
+}
+
+func fetchIllustrationAssets() map[string]string {
+	families := fetchBirdFamilies()
+
+	var illustrationAssets = make(map[string]string)
+
+	for _, family := range families {
+		resp, err := http.Get(fmt.Sprintf("https://birdsoftheworld.org/bow/api/v1/taxonomy?depth=2&rootTaxonCode=%s&regionFilterId=US&locale=en", family))
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		defer resp.Body.Close()
+		bodyBytes, _ := ioutil.ReadAll(resp.Body)
+
+		var bf BirdFamily
+		json.Unmarshal(bodyBytes, &bf)
+
+		for _, genus := range bf.SubTaxa {
+			for _, species := range genus.SubTaxa {
+				illustrationAssets[species.SciName] = fmt.Sprintf("https://cdn.download.ams.birds.cornell.edu/api/v1/asset/%s/160", species.IllusAssetID)
+			}
+		}
+	}
+
+	return illustrationAssets
+}
+
+func downloadTaxonomyGuide() {
 	fmt.Println("Downloading taxonomy...")
+
+	illustrationAssets := fetchIllustrationAssets()
 
 	var taxonomy []birds.Bird
 
@@ -50,6 +144,7 @@ func DownloadTaxonomyGuide() {
 		bird.ScientificName = scientificName
 		bird.GuideUrl = guideUrl
 		bird.ImgUrl = imgUrl
+		bird.IllustrationUrl = illustrationAssets[scientificName]
 		bird.LifeHistoryImageUrls = lifeHistoryImageUrls[0:5]
 
 		taxonomy = append(taxonomy, bird)
@@ -72,5 +167,5 @@ func DownloadTaxonomyGuide() {
 }
 
 func main() {
-	DownloadTaxonomyGuide()
+	downloadTaxonomyGuide()
 }

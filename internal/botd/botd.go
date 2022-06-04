@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"image"
-	"image/color"
 	"log"
 	"os"
 	"sync"
@@ -17,7 +16,6 @@ import (
 	"github.com/13-bit/birdboard/internal/img"
 	"github.com/cavaliergopher/grab/v3"
 	"github.com/disintegration/imaging"
-	"github.com/makeworld-the-better-one/dither"
 	qrcode "github.com/skip2/go-qrcode"
 )
 
@@ -129,7 +127,7 @@ func isTodaysBotd(botdTime time.Time) bool {
 }
 
 func downloadBotdImage(botd Botd) {
-	fmt.Println("Downloading BOTD image...")
+	fmt.Printf("Downloading BOTD image from %s...\n", botd.Bird.IllustrationUrl)
 
 	botdPath := config.BotdImageDownloadPath()
 
@@ -138,7 +136,7 @@ func downloadBotdImage(botd Botd) {
 		fmt.Println(err)
 	}
 
-	resp, err := grab.Get(botdPath, botd.Bird.ImgUrl)
+	resp, err := grab.Get(botdPath, botd.Bird.IllustrationUrl)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -157,36 +155,36 @@ func processBotdImage() {
 		log.Fatal(err)
 	}
 
-	maskFile, err := resourcesFS.Open("resources/botd-mask.png")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer maskFile.Close()
+	// maskFile, err := resourcesFS.Open("resources/botd-mask.png")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// defer maskFile.Close()
 
-	maskImage, _, err := image.Decode(maskFile)
-	if err != nil {
-		fmt.Println(err)
-	}
+	// maskImage, _, err := image.Decode(maskFile)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
 
 	botdImage = imaging.Resize(botdImage, 100, 0, imaging.Box)
 
-	palette := []color.Color{
-		color.RGBA{76, 76, 76, 255},
-		color.RGBA{132, 132, 132, 255},
-		color.RGBA{221, 221, 221, 255},
-		color.RGBA{188, 188, 188, 255},
-	}
+	// palette := []color.Color{
+	// 	color.RGBA{76, 76, 76, 255},
+	// 	color.RGBA{132, 132, 132, 255},
+	// 	color.RGBA{221, 221, 221, 255},
+	// 	color.RGBA{188, 188, 188, 255},
+	// }
 
-	d := dither.NewDitherer(palette)
-	d.Matrix = dither.Atkinson
+	// d := dither.NewDitherer(palette)
+	// d.Matrix = dither.Atkinson
 
-	botdImageDithered := d.Dither(botdImage)
+	// botdImageDithered := d.Dither(botdImage)
 
-	if botdImageDithered != nil {
-		botdImage = botdImageDithered
-	}
+	// if botdImageDithered != nil {
+	// 	botdImage = botdImageDithered
+	// }
 
-	botdImage = imaging.Overlay(botdImage, maskImage, image.Pt(0, 0), 255)
+	// botdImage = imaging.Overlay(botdImage, maskImage, image.Pt(0, 0), 255)
 
 	botdImage = img.RgbaToGray(botdImage)
 
