@@ -166,7 +166,11 @@ func processBotdImage() {
 	// 	fmt.Println(err)
 	// }
 
-	botdImage = imaging.Resize(botdImage, 100, 0, imaging.Box)
+	if botdImage.Bounds().Dx() >= botdImage.Bounds().Dy() {
+		botdImage = imaging.Resize(botdImage, 100, 0, imaging.Box)
+	} else {
+		botdImage = imaging.Resize(botdImage, 0, 80, imaging.Box)
+	}
 
 	// palette := []color.Color{
 	// 	color.RGBA{76, 76, 76, 255},
