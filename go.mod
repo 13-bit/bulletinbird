@@ -8,7 +8,7 @@ require (
 	github.com/disintegration/imaging v1.6.2
 	github.com/go-co-op/gocron v1.13.0
 	github.com/labstack/echo/v4 v4.7.2
-	github.com/makeworld-the-better-one/dither v1.0.0
+	github.com/magefile/mage v1.13.0
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 )
 

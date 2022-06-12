@@ -17,5 +17,7 @@
 # Go workspace file
 go.work
 
-# Bazel build files
-bazel-*
+# Mage build files
+build/birdboard-server
+build/download-taxonomy
+build/reset-botd
