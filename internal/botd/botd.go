@@ -166,7 +166,7 @@ func processBotdImage() {
 	// 	fmt.Println(err)
 	// }
 
-	if botdImage.Bounds().Dx() >= botdImage.Bounds().Dy() {
+	if botdImage.Bounds().Dx() > botdImage.Bounds().Dy() {
 		botdImage = imaging.Resize(botdImage, 100, 0, imaging.Box)
 	} else {
 		botdImage = imaging.Resize(botdImage, 0, 80, imaging.Box)
