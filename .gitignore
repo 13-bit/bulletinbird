@@ -18,6 +18,4 @@
 go.work
 
 # Mage build files
-build/birdboard-server
-build/download-taxonomy
-build/reset-botd
+build/*
