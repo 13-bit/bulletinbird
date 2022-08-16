@@ -6,9 +6,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/13-bit/birdboard/internal/birds"
-	"github.com/13-bit/birdboard/internal/botd"
-	"github.com/13-bit/birdboard/internal/config"
+	"github.com/13-bit/bulletinbird-server/internal/birds"
+	"github.com/13-bit/bulletinbird-server/internal/botd"
+	"github.com/13-bit/bulletinbird-server/internal/config"
 )
 
 func ResetBotd() {

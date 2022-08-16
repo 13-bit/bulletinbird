@@ -1,4 +1,4 @@
-module github.com/13-bit/birdboard
+module github.com/13-bit/bulletinbird-server
 
 go 1.18
 

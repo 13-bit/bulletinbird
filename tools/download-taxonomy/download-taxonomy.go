@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/13-bit/birdboard/internal/birds"
-	"github.com/13-bit/birdboard/internal/config"
+	"github.com/13-bit/bulletinbird-server/internal/birds"
+	"github.com/13-bit/bulletinbird-server/internal/config"
 	"github.com/PuerkitoBio/goquery"
 )
 

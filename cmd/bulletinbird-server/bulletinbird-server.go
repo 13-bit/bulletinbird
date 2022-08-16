@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/13-bit/birdboard/internal/botd"
-	"github.com/13-bit/birdboard/internal/config"
+	"github.com/13-bit/bulletinbird-server/internal/botd"
+	"github.com/13-bit/bulletinbird-server/internal/config"
 	"github.com/go-co-op/gocron"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -46,7 +46,7 @@ func main() {
 
 // Handler
 func hello(c echo.Context) error {
-	return c.String(http.StatusOK, "Welcome to Birdboard!")
+	return c.String(http.StatusOK, "Welcome to BulletinBird!")
 }
 
 func birdOfTheDay(c echo.Context) error {

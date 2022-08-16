@@ -11,9 +11,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/13-bit/birdboard/internal/birds"
-	"github.com/13-bit/birdboard/internal/config"
-	"github.com/13-bit/birdboard/internal/img"
+	"github.com/13-bit/bulletinbird-server/internal/birds"
+	"github.com/13-bit/bulletinbird-server/internal/config"
+	"github.com/13-bit/bulletinbird-server/internal/img"
 	"github.com/cavaliergopher/grab/v3"
 	"github.com/disintegration/imaging"
 	qrcode "github.com/skip2/go-qrcode"
