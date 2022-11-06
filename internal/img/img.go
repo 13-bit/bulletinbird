@@ -1,6 +1,9 @@
 package img
 
-import "image"
+import (
+	"image"
+	"image/color"
+)
 
 func RgbaToGray(img image.Image) *image.Gray {
 	var (
@@ -9,8 +12,7 @@ func RgbaToGray(img image.Image) *image.Gray {
 	)
 	for x := 0; x < bounds.Max.X; x++ {
 		for y := 0; y < bounds.Max.Y; y++ {
-			var rgba = img.At(x, y)
-			gray.Set(x, y, rgba)
+			gray.Set(x, y, color.GrayModel.Convert(img.At(x, y)))
 		}
 	}
 	return gray
