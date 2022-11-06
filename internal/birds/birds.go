@@ -18,7 +18,6 @@ type Bird struct {
 	ScientificName       string   `json:"sciName"`
 	CommonName           string   `json:"comName"`
 	GuideUrl             string   `json:"guideUrl"`
-	ImgUrl               string   `json:"imgUrl"`
 	IllustrationUrl      string   `json:"illustrationUrl"`
 	LifeHistoryImageUrls []string `json:"lifeHistoryImageUrls"`
 }
@@ -51,7 +50,7 @@ func SaveTaxonomy() {
 
 	taxonomy := GetTaxonomy()
 
-	taxonomyJson, err := json.MarshalIndent(taxonomy, "", "  ")
+	taxonomyJson, _ := json.MarshalIndent(taxonomy, "", "  ")
 
 	f.Write(taxonomyJson)
 
@@ -118,7 +117,7 @@ func SaveBirdList(birdList *list.List) {
 			birds = append(birds, e.Value.(Bird))
 		}
 
-		birdListJson, err := json.MarshalIndent(birds, "", "  ")
+		birdListJson, _ := json.MarshalIndent(birds, "", "  ")
 
 		f.Write(birdListJson)
 

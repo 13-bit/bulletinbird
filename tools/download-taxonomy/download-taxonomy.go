@@ -110,23 +110,44 @@ func downloadTaxonomyGuide() {
 
 	var taxonomy []birds.Bird
 
-	guideDoc, err := goquery.NewDocument("https://www.allaboutbirds.org/guide/browse/taxonomy")
+	taxonRes, err := http.Get("https://www.allaboutbirds.org/guide/browse/taxonomy")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer taxonRes.Body.Close()
+	if taxonRes.StatusCode != 200 {
+		log.Fatalf("status code error: %d %s", taxonRes.StatusCode, taxonRes.Status)
+	}
+
+	guideDoc, err := goquery.NewDocumentFromReader(taxonRes.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	guideDoc.Find(".species-card").Each(func(i int, s *goquery.Selection) {
+	speciesCards := guideDoc.Find(".species-card")
+
+	numSpecies := speciesCards.Length()
+	speciesIndex := 0
+
+	speciesCards.Each(func(i int, s *goquery.Selection) {
 		commonName := s.Find(".species-info").Find("h4").Text()
 		scientificName := s.Find(".species-info").Find("p").Text()
 		guideRelativeUrl, _ := s.Find(".species-info").Find("h4").Find("a").Attr("href")
 		guideUrl := fmt.Sprintf("https://www.allaboutbirds.org%s", guideRelativeUrl)
-		imgUrl, _ := s.Find(".species-image").Find("a").Find("img").Attr("src")
 
-		if imgUrl == "" {
-			imgUrl, _ = s.Find(".species-image").Find("a").Find("img").Attr("pre-src")
+		speciesIndex += 1
+		fmt.Printf("Downloading %s (%d of %d)... ", commonName, speciesIndex, numSpecies)
+
+		guideRes, err := http.Get(guideUrl)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer guideRes.Body.Close()
+		if guideRes.StatusCode != 200 {
+			log.Fatalf("status code error: %d %s", guideRes.StatusCode, guideRes.Status)
 		}
 
-		speciesDoc, err := goquery.NewDocument(guideUrl)
+		speciesDoc, err := goquery.NewDocumentFromReader(guideRes.Body)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -143,11 +164,12 @@ func downloadTaxonomyGuide() {
 		bird.CommonName = commonName
 		bird.ScientificName = scientificName
 		bird.GuideUrl = guideUrl
-		bird.ImgUrl = imgUrl
 		bird.IllustrationUrl = illustrationAssets[scientificName]
 		bird.LifeHistoryImageUrls = lifeHistoryImageUrls[0:5]
 
 		taxonomy = append(taxonomy, bird)
+
+		fmt.Println("Done.")
 	})
 
 	fmt.Println("Saving taxonomy...")
@@ -159,7 +181,7 @@ func downloadTaxonomyGuide() {
 
 	defer f.Close()
 
-	taxonomyJson, err := json.MarshalIndent(taxonomy, "", "  ")
+	taxonomyJson, _ := json.MarshalIndent(taxonomy, "", "  ")
 
 	f.Write(taxonomyJson)
 

@@ -93,7 +93,7 @@ func SaveBotd(botd Botd) {
 
 	defer f.Close()
 
-	botdJson, err := json.MarshalIndent(botd, "", "  ")
+	botdJson, _ := json.MarshalIndent(botd, "", "  ")
 
 	f.Write(botdJson)
 }
@@ -155,40 +155,11 @@ func processBotdImage() {
 		log.Fatal(err)
 	}
 
-	// maskFile, err := resourcesFS.Open("resources/botd-mask.png")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// defer maskFile.Close()
-
-	// maskImage, _, err := image.Decode(maskFile)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-
 	if botdImage.Bounds().Dx() > botdImage.Bounds().Dy() {
 		botdImage = imaging.Resize(botdImage, 100, 0, imaging.Box)
 	} else {
 		botdImage = imaging.Resize(botdImage, 0, 80, imaging.Box)
 	}
-
-	// palette := []color.Color{
-	// 	color.RGBA{76, 76, 76, 255},
-	// 	color.RGBA{132, 132, 132, 255},
-	// 	color.RGBA{221, 221, 221, 255},
-	// 	color.RGBA{188, 188, 188, 255},
-	// }
-
-	// d := dither.NewDitherer(palette)
-	// d.Matrix = dither.Atkinson
-
-	// botdImageDithered := d.Dither(botdImage)
-
-	// if botdImageDithered != nil {
-	// 	botdImage = botdImageDithered
-	// }
-
-	// botdImage = imaging.Overlay(botdImage, maskImage, image.Pt(0, 0), 255)
 
 	botdImage = img.RgbaToGray(botdImage)
 
