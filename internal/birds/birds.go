@@ -40,23 +40,6 @@ func GetTaxonomy() []Bird {
 	return taxonomy
 }
 
-func SaveTaxonomy() {
-	f, err := os.Create(config.TaxonomyFilePath())
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer f.Close()
-
-	taxonomy := GetTaxonomy()
-
-	taxonomyJson, _ := json.MarshalIndent(taxonomy, "", "  ")
-
-	f.Write(taxonomyJson)
-
-	fmt.Printf("%d birds saved to %s.\n", len(taxonomy), config.TaxonomyFilePath())
-}
-
 func RegenerateBirdList() {
 	taxonomy := GetTaxonomy()
 	birdList := list.New()

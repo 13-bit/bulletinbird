@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -60,7 +60,7 @@ func fetchBirdFamilies() []string {
 	}
 
 	defer resp.Body.Close()
-	bodyBytes, _ := ioutil.ReadAll(resp.Body)
+	bodyBytes, _ := io.ReadAll(resp.Body)
 
 	var bc BirdClass
 	json.Unmarshal(bodyBytes, &bc)
@@ -88,7 +88,7 @@ func fetchIllustrationAssets() map[string]string {
 		}
 
 		defer resp.Body.Close()
-		bodyBytes, _ := ioutil.ReadAll(resp.Body)
+		bodyBytes, _ := io.ReadAll(resp.Body)
 
 		var bf BirdFamily
 		json.Unmarshal(bodyBytes, &bf)
