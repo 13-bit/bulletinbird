@@ -1,0 +1,182 @@
+package inky
+
+import (
+	"embed"
+	"fmt"
+	"image"
+	"image/color"
+	"log"
+
+	"github.com/13-bit/bulletinbird-server/internal/config"
+	"github.com/disintegration/imaging"
+)
+
+//go:embed resources/*
+var resourcesFS embed.FS
+
+const inkyWidth = 640
+const inkyHeight = 400
+const botdWidth = 420
+const lifeHistoryWidth = 216
+const lifeHistoryHeight = 144
+const iconSize = 64
+
+func GenerateInkyImages() {
+	fmt.Println("Generating images for Inky...")
+
+	inkyImage := imaging.New(inkyWidth, inkyHeight, color.NRGBA{255, 255, 255, 255})
+
+	botdImage, botdOffset := genBotdImage()
+	botdX := inkyWidth - botdImage.Bounds().Dx()
+
+	inkyImage = imaging.Overlay(inkyImage, botdImage, image.Pt(botdX, botdOffset), 255)
+
+	lifeHistoryImage := genLifeHistoryImage()
+	lifeHistoryY := inkyHeight - lifeHistoryHeight
+
+	inkyImage = imaging.Overlay(inkyImage, lifeHistoryImage, image.Pt(0, lifeHistoryY), 255)
+
+	err := imaging.Save(inkyImage, config.InkyImagePath())
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
+func genBotdImage() (image.Image, int) {
+	fmt.Println("Generating BOTD image for Inky...")
+
+	offset := 0
+
+	botdImage, err := imaging.Open(config.BotdImageDownloadPath())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if botdImage.Bounds().Dx() > botdImage.Bounds().Dy() {
+		botdImage = imaging.Resize(botdImage, botdWidth, 0, imaging.Box)
+		offset = (inkyHeight - botdImage.Bounds().Dy()) / 2
+	} else {
+		botdImage = imaging.Resize(botdImage, 0, inkyHeight, imaging.Box)
+	}
+
+	return botdImage, offset
+}
+
+func genLifeHistoryImage() image.Image {
+	fmt.Println("Generating life history images for Inky...")
+
+	habitatPath, foodPath, nestingPath, behaviorPath, conservationPath := config.LifeHistoryImageDownloadPaths()
+
+	habitatImage, err := imaging.Open(habitatPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	habitatImage = imaging.Resize(habitatImage, iconSize, 0, imaging.Box)
+
+	habitatIconFile, err := resourcesFS.Open("resources/icon-habitat.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer habitatIconFile.Close()
+
+	habitatIcon, _, err := image.Decode(habitatIconFile)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	foodImage, err := imaging.Open(foodPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	foodImage = imaging.Resize(foodImage, iconSize, 0, imaging.Box)
+
+	foodIconFile, err := resourcesFS.Open("resources/icon-food.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer foodIconFile.Close()
+
+	foodIcon, _, err := image.Decode(foodIconFile)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	nestingImage, err := imaging.Open(nestingPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	nestingImage = imaging.Resize(nestingImage, iconSize, 0, imaging.Box)
+
+	nestingIconFile, err := resourcesFS.Open("resources/icon-nesting.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer nestingIconFile.Close()
+
+	nestingIcon, _, err := image.Decode(nestingIconFile)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	behaviorImage, err := imaging.Open(behaviorPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	behaviorImage = imaging.Resize(behaviorImage, iconSize, 0, imaging.Box)
+
+	behaviorIconFile, err := resourcesFS.Open("resources/icon-behavior.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer behaviorIconFile.Close()
+
+	behaviorIcon, _, err := image.Decode(behaviorIconFile)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	conservationImage, err := imaging.Open(conservationPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	conservationImage = imaging.Resize(conservationImage, iconSize, 0, imaging.Box)
+
+	maskFile, err := resourcesFS.Open("resources/icon-mask.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer behaviorIconFile.Close()
+
+	iconMask, _, err := image.Decode(maskFile)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	qrImage, err := imaging.Open(config.QrCodeImageDownloadPath())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	qrImage = imaging.CropAnchor(qrImage, iconSize, iconSize, imaging.Center)
+
+	lifeHistoryImage := imaging.New(lifeHistoryWidth, lifeHistoryHeight, color.NRGBA{255, 255, 255, 255})
+
+	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, qrImage, image.Pt(152, 72), 255)
+
+	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, habitatIcon, image.Pt(8, 0), 255)
+	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, habitatImage, image.Pt(8, 0), 255)
+
+	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, foodIcon, image.Pt(80, 0), 255)
+	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, foodImage, image.Pt(80, 0), 255)
+
+	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, nestingIcon, image.Pt(8, 72), 255)
+	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, nestingImage, image.Pt(8, 72), 255)
+
+	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, behaviorIcon, image.Pt(80, 72), 255)
+	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, behaviorImage, image.Pt(80, 72), 255)
+
+	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, conservationImage, image.Pt(152, 0), 255)
+	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, iconMask, image.Pt(152, 0), 255)
+
+	return lifeHistoryImage
+}

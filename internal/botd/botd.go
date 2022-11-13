@@ -1,11 +1,9 @@
 package botd
 
 import (
-	"embed"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"image"
 	"log"
 	"os"
 	"sync"
@@ -13,14 +11,11 @@ import (
 
 	"github.com/13-bit/bulletinbird-server/internal/birds"
 	"github.com/13-bit/bulletinbird-server/internal/config"
-	"github.com/13-bit/bulletinbird-server/internal/img"
+	"github.com/13-bit/bulletinbird-server/internal/platforms/inky"
+	"github.com/13-bit/bulletinbird-server/internal/platforms/magtag"
 	"github.com/cavaliergopher/grab/v3"
-	"github.com/disintegration/imaging"
 	qrcode "github.com/skip2/go-qrcode"
 )
-
-//go:embed resources/*
-var resourcesFS embed.FS
 
 var lock = &sync.Mutex{}
 
@@ -76,11 +71,11 @@ func nextBotd() Botd {
 
 	SaveBotd(botd)
 	downloadBotdImage(botd)
-	processBotdImage()
-	generateQrCode(botd)
-	processQrCodeImage()
+	generateQrCode(botd, 80)
 	downloadLifeHistoryImages(botd)
-	processLifeHistoryImages()
+
+	magtag.GenerateMagtagImages()
+	inky.GenerateInkyImages()
 
 	return botd
 }
@@ -144,65 +139,10 @@ func downloadBotdImage(botd Botd) {
 	fmt.Println("Download saved to", resp.Filename)
 }
 
-func processBotdImage() {
-	fmt.Println("Processing image...")
-
-	botdPath := config.BotdImageDownloadPath()
-	pngPath, bmpPath := config.BotdImageFilePaths()
-
-	botdImage, err := imaging.Open(botdPath)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if botdImage.Bounds().Dx() > botdImage.Bounds().Dy() {
-		botdImage = imaging.Resize(botdImage, 100, 0, imaging.Box)
-	} else {
-		botdImage = imaging.Resize(botdImage, 0, 80, imaging.Box)
-	}
-
-	botdImage = img.RgbaToGray(botdImage)
-
-	err = imaging.Save(botdImage, pngPath)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	err = imaging.Save(botdImage, bmpPath)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
-func generateQrCode(botd Botd) {
+func generateQrCode(botd Botd, size int) {
 	qrPath := config.QrCodeImageDownloadPath()
 
-	err := qrcode.WriteFile(botd.Bird.GuideUrl, qrcode.Medium, 80, qrPath)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
-func processQrCodeImage() {
-	fmt.Println("Processing QR code...")
-
-	qrPath := config.QrCodeImageDownloadPath()
-
-	pngPath, bmpPath := config.QrCodeImageFilePaths()
-
-	qrImage, err := imaging.Open(qrPath)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	qrImage = img.RgbaToGray(qrImage)
-
-	err = imaging.Save(qrImage, pngPath)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	err = imaging.Save(qrImage, bmpPath)
+	err := qrcode.WriteFile(botd.Bird.GuideUrl, qrcode.Medium, size, qrPath)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -227,65 +167,5 @@ func downloadLifeHistoryImages(botd Botd) {
 		}
 
 		fmt.Println("Download saved to", resp.Filename)
-	}
-}
-
-func processLifeHistoryImages() {
-	fmt.Println("Processing life history images...")
-
-	lifeHistoryFile, err := resourcesFS.Open("resources/life-history-template.png")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer lifeHistoryFile.Close()
-
-	lifeHistoryImage, _, err := image.Decode(lifeHistoryFile)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	habitatPath, foodPath, nestingPath, behaviorPath, _ := config.LifeHistoryImageDownloadPaths()
-
-	habitatImage, err := imaging.Open(habitatPath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	habitatImage = imaging.Resize(habitatImage, 36, 0, imaging.Box)
-
-	foodImage, err := imaging.Open(foodPath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	foodImage = imaging.Resize(foodImage, 36, 0, imaging.Box)
-
-	nestingImage, err := imaging.Open(nestingPath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	nestingImage = imaging.Resize(nestingImage, 36, 0, imaging.Box)
-
-	behaviorImage, err := imaging.Open(behaviorPath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	behaviorImage = imaging.Resize(behaviorImage, 36, 0, imaging.Box)
-
-	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, habitatImage, image.Pt(0, 0), 255)
-	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, foodImage, image.Pt(40, 0), 255)
-	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, nestingImage, image.Pt(0, 40), 255)
-	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, behaviorImage, image.Pt(40, 40), 255)
-
-	lifeHistoryImage = img.RgbaToGray(lifeHistoryImage)
-
-	pngPath, bmpPath := config.LifeHistoryImagePaths()
-
-	err = imaging.Save(lifeHistoryImage, pngPath)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	err = imaging.Save(lifeHistoryImage, bmpPath)
-	if err != nil {
-		fmt.Println(err)
 	}
 }

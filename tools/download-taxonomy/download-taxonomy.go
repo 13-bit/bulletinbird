@@ -95,7 +95,7 @@ func fetchIllustrationAssets() map[string]string {
 
 		for _, genus := range bf.SubTaxa {
 			for _, species := range genus.SubTaxa {
-				illustrationAssets[species.SciName] = fmt.Sprintf("https://cdn.download.ams.birds.cornell.edu/api/v1/asset/%s/160", species.IllusAssetID)
+				illustrationAssets[species.SciName] = fmt.Sprintf("https://cdn.download.ams.birds.cornell.edu/api/v1/asset/%s/640", species.IllusAssetID)
 			}
 		}
 	}
