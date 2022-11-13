@@ -26,10 +26,10 @@ func GenerateInkyImages() {
 
 	inkyImage := imaging.New(inkyWidth, inkyHeight, color.NRGBA{255, 255, 255, 255})
 
-	botdImage, botdOffset := genBotdImage()
-	botdX := inkyWidth - botdImage.Bounds().Dx()
+	botdImage, xOffset, yOffset := genBotdImage()
+	botdX := inkyWidth - botdImage.Bounds().Dx() - xOffset
 
-	inkyImage = imaging.Overlay(inkyImage, botdImage, image.Pt(botdX, botdOffset), 255)
+	inkyImage = imaging.Overlay(inkyImage, botdImage, image.Pt(botdX, yOffset), 255)
 
 	lifeHistoryImage := genLifeHistoryImage()
 	lifeHistoryY := inkyHeight - lifeHistoryHeight
@@ -42,10 +42,11 @@ func GenerateInkyImages() {
 	}
 }
 
-func genBotdImage() (image.Image, int) {
+func genBotdImage() (image.Image, int, int) {
 	fmt.Println("Generating BOTD image for Inky...")
 
-	offset := 0
+	xOffset := 0
+	yOffset := 0
 
 	botdImage, err := imaging.Open(config.BotdImageDownloadPath())
 	if err != nil {
@@ -54,12 +55,13 @@ func genBotdImage() (image.Image, int) {
 
 	if botdImage.Bounds().Dx() > botdImage.Bounds().Dy() {
 		botdImage = imaging.Resize(botdImage, botdWidth, 0, imaging.Box)
-		offset = (inkyHeight - botdImage.Bounds().Dy()) / 2
+		yOffset = (inkyHeight - botdImage.Bounds().Dy()) / 2
 	} else {
 		botdImage = imaging.Resize(botdImage, 0, inkyHeight, imaging.Box)
+		xOffset = (botdWidth - botdImage.Bounds().Dx()) / 2
 	}
 
-	return botdImage, offset
+	return botdImage, xOffset, yOffset
 }
 
 func genLifeHistoryImage() image.Image {
