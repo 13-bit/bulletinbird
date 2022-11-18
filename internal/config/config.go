@@ -64,6 +64,11 @@ func StaticPath() string {
 	return fmt.Sprintf("%s/.bulletinbird/static", homeDir)
 }
 
+func FontPaths() (string, string) {
+	homeDir, _ := os.UserHomeDir()
+	return fmt.Sprintf("%s/.bulletinbird/fonts/IBMPlexSans-Regular.ttf", homeDir), fmt.Sprintf("%s/.bulletinbird/fonts/IBMPlexSans-Italic.ttf", homeDir)
+}
+
 func InkyImagePath() string {
 	homeDir, _ := os.UserHomeDir()
 	return fmt.Sprintf("%s/.bulletinbird/inky/botd.png", homeDir)
