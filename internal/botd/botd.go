@@ -75,7 +75,7 @@ func nextBotd() Botd {
 	downloadLifeHistoryImages(botd)
 
 	magtag.GenerateMagtagImages()
-	inky.GenerateInkyImages()
+	inky.GenerateInkyImages(botd.Bird)
 
 	return botd
 }

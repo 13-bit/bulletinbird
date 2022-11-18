@@ -7,8 +7,10 @@ import (
 	"image/color"
 	"log"
 
+	"github.com/13-bit/bulletinbird-server/internal/birds"
 	"github.com/13-bit/bulletinbird-server/internal/config"
 	"github.com/disintegration/imaging"
+	"github.com/fogleman/gg"
 )
 
 //go:embed resources/*
@@ -21,7 +23,7 @@ const lifeHistoryWidth = 216
 const lifeHistoryHeight = 144
 const iconSize = 64
 
-func GenerateInkyImages() {
+func GenerateInkyImages(botd birds.Bird) {
 	fmt.Println("Generating images for Inky...")
 
 	inkyImage := imaging.New(inkyWidth, inkyHeight, color.NRGBA{255, 255, 255, 255})
@@ -30,6 +32,10 @@ func GenerateInkyImages() {
 	botdX := inkyWidth - botdImage.Bounds().Dx() - xOffset
 
 	inkyImage = imaging.Overlay(inkyImage, botdImage, image.Pt(botdX, yOffset), 255)
+
+	textImage := genBotdText(botd)
+
+	inkyImage = imaging.Overlay(inkyImage, textImage, image.Pt(0, 0), 255)
 
 	lifeHistoryImage := genLifeHistoryImage()
 	lifeHistoryY := inkyHeight - lifeHistoryHeight
@@ -181,4 +187,28 @@ func genLifeHistoryImage() image.Image {
 	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, iconMask, image.Pt(152, 0), 255)
 
 	return lifeHistoryImage
+}
+
+func genBotdText(botd birds.Bird) image.Image {
+	dc := gg.NewContext(220, 240)
+
+	dc.SetRGB(1, 1, 1)
+	dc.Clear()
+	dc.SetRGB(0, 0, 0)
+
+	if err := dc.LoadFontFace("/Users/13bit/Library/Fonts/IBMPlexSansCondensed-Regular.ttf", 20); err != nil {
+		panic(err)
+	}
+
+	// dc.DrawStringWrapped(botd.CommonName, 16, 132, 16, 132, 200, 1.5, gg.AlignLeft)
+	dc.DrawString(botd.CommonName, 16, 164)
+
+	if err := dc.LoadFontFace("/Users/13bit/Library/Fonts/IBMPlexSansCondensed-Italic.ttf", 16); err != nil {
+		panic(err)
+	}
+
+	// dc.DrawStringWrapped(botd.CommonName, 16, 132, 16, 132, 200, 1.5, gg.AlignLeft)
+	dc.DrawString(botd.ScientificName, 16, 180)
+
+	return dc.Image()
 }
