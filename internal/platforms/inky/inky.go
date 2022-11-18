@@ -6,6 +6,7 @@ import (
 	"image"
 	"image/color"
 	"log"
+	"os/exec"
 
 	"github.com/13-bit/bulletinbird-server/internal/birds"
 	"github.com/13-bit/bulletinbird-server/internal/config"
@@ -22,6 +23,13 @@ const botdWidth = 420
 const lifeHistoryWidth = 216
 const lifeHistoryHeight = 144
 const iconSize = 64
+
+func Update() {
+	cmd := exec.Command("python3", config.InkyImageScript(), config.InkyImagePath())
+	if err := cmd.Run(); err != nil {
+		log.Fatal(err)
+	}
+}
 
 func GenerateInkyImages(botd birds.Bird) {
 	fmt.Println("Generating images for Inky...")

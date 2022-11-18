@@ -73,3 +73,8 @@ func InkyImagePath() string {
 	homeDir, _ := os.UserHomeDir()
 	return fmt.Sprintf("%s/.bulletinbird/inky/botd.png", homeDir)
 }
+
+func InkyImageScript() string {
+	homeDir, _ := os.UserHomeDir()
+	return fmt.Sprintf("%s/inky/examples/7color/image.py", homeDir)
+}

@@ -76,6 +76,7 @@ func nextBotd() Botd {
 
 	magtag.GenerateMagtagImages()
 	inky.GenerateInkyImages(botd.Bird)
+	inky.Update()
 
 	return botd
 }
