@@ -203,13 +203,20 @@ func genLifeHistoryImage() image.Image {
 }
 
 func genBotdText(botd birds.Bird) image.Image {
-	commonNameFont, scientificNameFont := config.FontPaths()
+	commonNameFont, scientificNameFont, titleFont := config.FontPaths()
 
 	dc := gg.NewContext(220, 240)
 
 	dc.SetRGB(1, 1, 1)
 	dc.Clear()
 	dc.SetRGB(0, 0, 0)
+
+	if err := dc.LoadFontFace(titleFont, 28); err != nil {
+		panic(err)
+	}
+
+	// dc.DrawStringWrapped("Bird of the Day", 16, 132, 16, 132, 200, 1.5, gg.AlignLeft)
+	dc.DrawString("Bird of the Day", 16, 36)
 
 	if err := dc.LoadFontFace(commonNameFont, 20); err != nil {
 		panic(err)
