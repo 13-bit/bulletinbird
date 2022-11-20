@@ -29,15 +29,12 @@ var (
 )
 
 func BirdOfTheDay() Botd {
-
-	lock.Lock()
-	defer lock.Unlock()
-
-	if !isTodaysBotd(botd.LastUpdated) {
-		LoadBotd()
-	}
-
 	return botd
+}
+
+func InitBotd() {
+	botd = loadBotd()
+	UpdateBotd()
 }
 
 func UpdateBotd() error {
@@ -51,6 +48,8 @@ func UpdateBotd() error {
 	}
 
 	fmt.Printf("%+v\n", botd.Bird)
+
+	refresh()
 
 	return nil
 }
@@ -69,19 +68,22 @@ func nextBotd() Botd {
 		LastUpdated: time.Now(),
 	}
 
-	SaveBotd(botd)
+	saveBotd(botd)
+
+	return botd
+}
+
+func refresh() {
 	downloadBotdImage(botd)
 	generateQrCode(botd, 80)
 	downloadLifeHistoryImages(botd)
 
 	magtag.GenerateMagtagImages()
 	inky.GenerateInkyImages(botd.Bird)
-	inky.Update()
-
-	return botd
+	inky.Refresh()
 }
 
-func SaveBotd(botd Botd) {
+func saveBotd(botd Botd) {
 	f, err := os.Create(config.BotdFilePath())
 	if err != nil {
 		log.Fatal(err)
@@ -94,7 +96,7 @@ func SaveBotd(botd Botd) {
 	f.Write(botdJson)
 }
 
-func LoadBotd() {
+func loadBotd() Botd {
 	f, err := os.Open(config.BotdFilePath())
 	if err != nil {
 		log.Fatal(err)
@@ -102,16 +104,14 @@ func LoadBotd() {
 
 	defer f.Close()
 
-	err = json.NewDecoder(f).Decode(&botd)
+	var b Botd
+
+	err = json.NewDecoder(f).Decode(&b)
 	if err != nil {
-		botd = nextBotd()
+		log.Fatal(err)
 	}
 
-	if !isTodaysBotd(botd.LastUpdated) {
-		botd = nextBotd()
-	}
-
-	fmt.Printf("%+v\n", botd.Bird)
+	return b
 }
 
 func isTodaysBotd(botdTime time.Time) bool {

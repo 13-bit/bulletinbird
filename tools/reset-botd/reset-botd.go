@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -31,7 +32,16 @@ func ResetBotd() {
 		LastUpdated: ts,
 	}
 
-	botd.SaveBotd(emptyBotd)
+	f, err := os.Create(config.BotdFilePath())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer f.Close()
+
+	botdJson, _ := json.MarshalIndent(emptyBotd, "", "  ")
+
+	f.Write(botdJson)
 }
 
 func main() {

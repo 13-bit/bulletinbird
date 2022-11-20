@@ -7,6 +7,7 @@ import (
 	"image/color"
 	"log"
 	"os/exec"
+	"runtime"
 
 	"github.com/13-bit/bulletinbird-server/internal/birds"
 	"github.com/13-bit/bulletinbird-server/internal/config"
@@ -17,17 +18,21 @@ import (
 //go:embed resources/*
 var resourcesFS embed.FS
 
-const inkyWidth = 640
-const inkyHeight = 400
-const botdWidth = 420
-const lifeHistoryWidth = 216
-const lifeHistoryHeight = 144
-const iconSize = 64
+const (
+	inkyWidth         = 640
+	inkyHeight        = 400
+	botdWidth         = 420
+	lifeHistoryWidth  = 216
+	lifeHistoryHeight = 144
+	iconSize          = 64
+)
 
-func Update() {
-	cmd := exec.Command("python3", config.InkyImageScript(), config.InkyImagePath())
-	if err := cmd.Run(); err != nil {
-		log.Fatal(err)
+func Refresh() {
+	if runtime.GOOS == "linux" {
+		cmd := exec.Command("python3", config.InkyImageScript(), config.InkyImagePath())
+		if err := cmd.Run(); err != nil {
+			log.Fatal(err)
+		}
 	}
 }
 

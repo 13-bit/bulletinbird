@@ -15,7 +15,7 @@ import (
 
 func main() {
 	// Load the BOTD
-	botd.LoadBotd()
+	botd.InitBotd()
 
 	// Update the BOTD every day at midnight
 	loc, _ := time.LoadLocation("America/Chicago")
