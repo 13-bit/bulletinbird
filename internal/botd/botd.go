@@ -2,7 +2,6 @@ package botd
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -34,24 +33,21 @@ func BirdOfTheDay() Botd {
 
 func InitBotd() {
 	botd = loadBotd()
+
 	UpdateBotd()
 }
 
-func UpdateBotd() error {
+func UpdateBotd() {
 	lock.Lock()
 	defer lock.Unlock()
 
 	if !isTodaysBotd(botd.LastUpdated) {
 		botd = nextBotd()
-	} else {
-		return errors.New("BOTD is already up to date")
 	}
 
 	fmt.Printf("%+v\n", botd.Bird)
 
 	refresh()
-
-	return nil
 }
 
 func nextBotd() Botd {
@@ -97,6 +93,8 @@ func saveBotd(botd Botd) {
 }
 
 func loadBotd() Botd {
+	fmt.Println("Loading BOTD...")
+
 	f, err := os.Open(config.BotdFilePath())
 	if err != nil {
 		log.Fatal(err)
