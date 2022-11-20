@@ -19,6 +19,10 @@ func Build() error {
 		return err
 	}
 
+	if err := sh.Run("go", "build", "-o", "build/", "./tools/gen-botd"); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -32,6 +36,10 @@ func BuildTools() error {
 	}
 
 	if err := sh.Run("go", "build", "-o", "build/", "./tools/reset-botd"); err != nil {
+		return err
+	}
+
+	if err := sh.Run("go", "build", "-o", "build/", "./tools/gen-botd"); err != nil {
 		return err
 	}
 
