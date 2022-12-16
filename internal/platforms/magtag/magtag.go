@@ -48,7 +48,7 @@ func processBotdImage() {
 func processQrCodeImage() {
 	fmt.Println("Processing QR code...")
 
-	qrPath := config.QrCodeImageDownloadPath()
+	qrPath := config.QrCodeImageDownloadPath(80)
 
 	bmpPath := config.QrCodeImageFilePath("bmp")
 

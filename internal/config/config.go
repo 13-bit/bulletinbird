@@ -25,9 +25,9 @@ func BotdImageDownloadPath() string {
 	return fmt.Sprintf("%s/.bulletinbird/botd.png", homeDir)
 }
 
-func QrCodeImageDownloadPath() string {
+func QrCodeImageDownloadPath(size int) string {
 	homeDir, _ := os.UserHomeDir()
-	return fmt.Sprintf("%s/.bulletinbird/qr.png", homeDir)
+	return fmt.Sprintf("%s/.bulletinbird/qr-%d.png", homeDir, size)
 }
 
 func LifeHistoryImageDownloadPaths() (string, string, string, string, string) {

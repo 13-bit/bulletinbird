@@ -72,6 +72,7 @@ func nextBotd() Botd {
 func refresh() {
 	downloadBotdImage(botd)
 	generateQrCode(botd, 80)
+	generateQrCode(botd, 144)
 	downloadLifeHistoryImages(botd)
 
 	magtag.GenerateMagtagImages()
@@ -139,7 +140,7 @@ func downloadBotdImage(botd Botd) {
 }
 
 func generateQrCode(botd Botd, size int) {
-	qrPath := config.QrCodeImageDownloadPath()
+	qrPath := config.QrCodeImageDownloadPath(size)
 
 	err := qrcode.WriteFile(botd.Bird.GuideUrl, qrcode.Medium, size, qrPath)
 	if err != nil {

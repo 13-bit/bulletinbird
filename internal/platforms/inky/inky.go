@@ -23,8 +23,9 @@ const (
 	inkyHeight        = 400
 	botdWidth         = 420
 	lifeHistoryWidth  = 216
-	lifeHistoryHeight = 144
+	lifeHistoryHeight = 216
 	iconSize          = 64
+	qrSize            = 144
 )
 
 func Refresh() {
@@ -173,16 +174,16 @@ func genLifeHistoryImage() image.Image {
 		fmt.Println(err)
 	}
 
-	qrImage, err := imaging.Open(config.QrCodeImageDownloadPath())
+	qrImage, err := imaging.Open(config.QrCodeImageDownloadPath(qrSize))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	qrImage = imaging.CropAnchor(qrImage, iconSize, iconSize, imaging.Center)
+	// qrImage = imaging.CropAnchor(qrImage, qrSize, qrSize, imaging.Center)
 
 	lifeHistoryImage := imaging.New(lifeHistoryWidth, lifeHistoryHeight, color.NRGBA{255, 255, 255, 255})
 
-	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, qrImage, image.Pt(152, 72), 255)
+	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, qrImage, image.Pt(8, 64), 255)
 
 	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, habitatIcon, image.Pt(8, 0), 255)
 	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, habitatImage, image.Pt(8, 0), 255)
@@ -190,11 +191,11 @@ func genLifeHistoryImage() image.Image {
 	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, foodIcon, image.Pt(80, 0), 255)
 	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, foodImage, image.Pt(80, 0), 255)
 
-	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, nestingIcon, image.Pt(8, 72), 255)
-	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, nestingImage, image.Pt(8, 72), 255)
+	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, nestingIcon, image.Pt(152, 72), 255)
+	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, nestingImage, image.Pt(152, 72), 255)
 
-	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, behaviorIcon, image.Pt(80, 72), 255)
-	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, behaviorImage, image.Pt(80, 72), 255)
+	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, behaviorIcon, image.Pt(152, 144), 255)
+	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, behaviorImage, image.Pt(152, 144), 255)
 
 	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, conservationImage, image.Pt(152, 0), 255)
 	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, iconMask, image.Pt(152, 0), 255)
@@ -223,14 +224,14 @@ func genBotdText(botd birds.Bird) image.Image {
 	}
 
 	// dc.DrawStringWrapped(botd.CommonName, 16, 132, 16, 132, 200, 1.5, gg.AlignLeft)
-	dc.DrawString(botd.CommonName, 16, 164)
+	dc.DrawString(botd.CommonName, 16, 132)
 
 	if err := dc.LoadFontFace(scientificNameFont, 16); err != nil {
 		panic(err)
 	}
 
 	// dc.DrawStringWrapped(botd.CommonName, 16, 132, 16, 132, 200, 1.5, gg.AlignLeft)
-	dc.DrawString(botd.ScientificName, 16, 180)
+	dc.DrawString(botd.ScientificName, 16, 148)
 
 	return dc.Image()
 }
