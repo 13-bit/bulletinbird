@@ -59,5 +59,9 @@ func Install() error {
 		return err
 	}
 
+	if err := sh.Run("go", "install", "./tools/gen-botd"); err != nil {
+		return err
+	}
+
 	return nil
 }
