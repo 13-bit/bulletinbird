@@ -202,6 +202,8 @@ func genLifeHistoryImage() image.Image {
 	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, conservationImage, image.Pt(152, 0), 255)
 	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, iconMask, image.Pt(152, 0), 255)
 
+	lifeHistoryImage = imaging.AdjustSaturation(lifeHistoryImage, 64)
+
 	return lifeHistoryImage
 }
 
