@@ -81,6 +81,8 @@ func genBotdImage() (image.Image, int, int) {
 		xOffset = (botdWidth - botdImage.Bounds().Dx()) / 2
 	}
 
+	botdImage = imaging.AdjustSaturation(botdImage, 64)
+
 	return botdImage, xOffset, yOffset
 }
 
