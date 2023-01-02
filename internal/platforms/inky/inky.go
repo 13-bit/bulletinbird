@@ -219,21 +219,23 @@ func genBotdText(botd birds.Bird) image.Image {
 	}
 
 	// dc.DrawStringWrapped("Bird of the Day", 16, 132, 16, 132, 200, 1.5, gg.AlignLeft)
-	dc.DrawString("Bird of the Day", 16, 36)
+	dc.DrawString("Bird of the Day", 16, 44)
 
 	if err := dc.LoadFontFace(commonNameFont, 20); err != nil {
 		panic(err)
 	}
 
-	// dc.DrawStringWrapped(botd.CommonName, 16, 132, 16, 132, 200, 1.5, gg.AlignLeft)
-	dc.DrawString(botd.CommonName, 16, 132)
+	dc.DrawStringWrapped(botd.CommonName, 16, 80, 0, 0, 200, 1.25, gg.AlignLeft)
+	// dc.DrawString(botd.CommonName, 16, 132)
+
+	_, sh := dc.MeasureString(botd.CommonName)
 
 	if err := dc.LoadFontFace(scientificNameFont, 16); err != nil {
 		panic(err)
 	}
 
-	// dc.DrawStringWrapped(botd.CommonName, 16, 132, 16, 132, 200, 1.5, gg.AlignLeft)
-	dc.DrawString(botd.ScientificName, 16, 148)
+	dc.DrawStringWrapped(botd.ScientificName, 16, 80+sh+8, 0, 0, 200, 1.25, gg.AlignLeft)
+	// dc.DrawString(botd.ScientificName, 16, 148)
 
 	return dc.Image()
 }
