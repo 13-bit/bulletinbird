@@ -225,6 +225,8 @@ func genBotdText(botd birds.Bird) image.Image {
 		panic(err)
 	}
 
+	lines := dc.WordWrap(botd.CommonName, 200)
+
 	dc.DrawStringWrapped(botd.CommonName, 16, 80, 0, 0, 200, 1.25, gg.AlignLeft)
 	// dc.DrawString(botd.CommonName, 16, 132)
 
@@ -234,7 +236,9 @@ func genBotdText(botd birds.Bird) image.Image {
 		panic(err)
 	}
 
-	dc.DrawStringWrapped(botd.ScientificName, 16, 80+sh+8, 0, 0, 200, 1.25, gg.AlignLeft)
+	textOffset := (sh + 8) * float64(len(lines))
+
+	dc.DrawStringWrapped(botd.ScientificName, 16, 80+textOffset, 0, 0, 200, 1.25, gg.AlignLeft)
 	// dc.DrawString(botd.ScientificName, 16, 148)
 
 	return dc.Image()
