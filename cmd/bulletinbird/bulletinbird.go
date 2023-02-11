@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/13-bit/bulletinbird-server/internal/botd"
-	"github.com/13-bit/bulletinbird-server/internal/config"
+	"github.com/13-bit/bulletinbird/botd"
+	"github.com/13-bit/bulletinbird/config"
 	"github.com/go-co-op/gocron"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"

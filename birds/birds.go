@@ -11,7 +11,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/13-bit/bulletinbird-server/internal/config"
+	"github.com/13-bit/bulletinbird/config"
 )
 
 type Bird struct {

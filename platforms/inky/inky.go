@@ -9,8 +9,8 @@ import (
 	"os/exec"
 	"runtime"
 
-	"github.com/13-bit/bulletinbird-server/internal/birds"
-	"github.com/13-bit/bulletinbird-server/internal/config"
+	"github.com/13-bit/bulletinbird/birds"
+	"github.com/13-bit/bulletinbird/config"
 	"github.com/disintegration/imaging"
 	"github.com/fogleman/gg"
 )

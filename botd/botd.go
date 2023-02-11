@@ -8,10 +8,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/13-bit/bulletinbird-server/internal/birds"
-	"github.com/13-bit/bulletinbird-server/internal/config"
-	"github.com/13-bit/bulletinbird-server/internal/platforms/inky"
-	"github.com/13-bit/bulletinbird-server/internal/platforms/magtag"
+	"github.com/13-bit/bulletinbird/birds"
+	"github.com/13-bit/bulletinbird/config"
+	"github.com/13-bit/bulletinbird/platforms/inky"
+	"github.com/13-bit/bulletinbird/platforms/magtag"
 	"github.com/cavaliergopher/grab/v3"
 	qrcode "github.com/skip2/go-qrcode"
 )

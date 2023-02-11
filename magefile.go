@@ -7,7 +7,7 @@ import (
 )
 
 func Build() error {
-	if err := sh.Run("go", "build", "-o", "build/", "./cmd/bulletinbird-server"); err != nil {
+	if err := sh.Run("go", "build", "-o", "build/", "./cmd/bulletinbird"); err != nil {
 		return err
 	}
 
@@ -27,7 +27,7 @@ func Build() error {
 }
 
 func BuildServer() error {
-	return sh.Run("go", "build", "-o", "build/", "./cmd/bulletinbird-server")
+	return sh.Run("go", "build", "-o", "build/", "./cmd/bulletinbird")
 }
 
 func BuildTools() error {
@@ -47,7 +47,7 @@ func BuildTools() error {
 }
 
 func Install() error {
-	if err := sh.Run("go", "install", "./cmd/bulletinbird-server"); err != nil {
+	if err := sh.Run("go", "install", "./cmd/bulletinbird"); err != nil {
 		return err
 	}
 
