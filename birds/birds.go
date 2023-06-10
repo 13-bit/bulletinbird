@@ -3,6 +3,7 @@ package birds
 import (
 	"container/list"
 	cr "crypto/rand"
+	"embed"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -14,6 +15,9 @@ import (
 	"github.com/13-bit/bulletinbird/config"
 )
 
+//go:embed resources/*
+var resourcesFS embed.FS
+
 type Bird struct {
 	ScientificName       string   `json:"sciName"`
 	CommonName           string   `json:"comName"`
@@ -23,7 +27,7 @@ type Bird struct {
 }
 
 func GetTaxonomy() []Bird {
-	f, err := os.Open(config.TaxonomyFilePath())
+	f, err := resourcesFS.Open("resources/taxonomy.json")
 	if err != nil {
 		log.Fatal(err)
 	}

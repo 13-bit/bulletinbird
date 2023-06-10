@@ -9,7 +9,7 @@ import (
 	"os"
 
 	"github.com/13-bit/bulletinbird/birds"
-	"github.com/13-bit/bulletinbird/config"
+	"github.com/13-bit/bulletinbird/util"
 	"github.com/PuerkitoBio/goquery"
 )
 
@@ -174,7 +174,7 @@ func downloadTaxonomyGuide() {
 
 	fmt.Println("Saving taxonomy...")
 
-	f, err := os.Create(config.TaxonomyFilePath())
+	f, err := os.Create(taxonomyFilePath())
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -185,7 +185,13 @@ func downloadTaxonomyGuide() {
 
 	f.Write(taxonomyJson)
 
-	fmt.Printf("%d birds saved to %s\n", len(taxonomy), config.TaxonomyFilePath())
+	fmt.Printf("%d birds saved to %s\n", len(taxonomy), taxonomyFilePath())
+}
+
+func taxonomyFilePath() string {
+	moduleBaseDir := util.GoModDir()
+
+	return fmt.Sprintf("%s/birds/resources/taxonomy.json", moduleBaseDir)
 }
 
 func main() {

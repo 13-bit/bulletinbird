@@ -5,10 +5,10 @@ import (
 	"os"
 )
 
-func TaxonomyFilePath() string {
-	homeDir, _ := os.UserHomeDir()
-	return fmt.Sprintf("%s/.bulletinbird/taxonomy.json", homeDir)
-}
+// func TaxonomyFilePath() string {
+// 	homeDir, _ := os.UserHomeDir()
+// 	return fmt.Sprintf("%s/.bulletinbird/taxonomy.json", homeDir)
+// }
 
 func BotdFilePath() string {
 	homeDir, _ := os.UserHomeDir()
