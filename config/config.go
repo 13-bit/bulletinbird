@@ -1,9 +1,16 @@
 package config
 
 import (
+	"embed"
 	"fmt"
+	"log"
 	"os"
+
+	"github.com/13-bit/bulletinbird/util"
 )
+
+//go:embed resources/*
+var resourcesFS embed.FS
 
 var configDir string
 
@@ -19,7 +26,10 @@ var botdFilePath,
 	magtagImagePath,
 	magtagLifeHistoryImagePath,
 	magTagQrCodeImagePath,
-	staticPath string
+	staticPath,
+	regularFontPath,
+	italicFontPath,
+	scriptFontPath string
 
 func init() {
 	homeDir, _ := os.UserHomeDir()
@@ -38,6 +48,60 @@ func init() {
 	magtagLifeHistoryImagePath = fmt.Sprintf("%s/static/magtag/life-history.bmp", configDir)
 	magTagQrCodeImagePath = fmt.Sprintf("%s/static/magtag/qr.bmp", configDir)
 	staticPath = fmt.Sprintf("%s/static", configDir)
+	regularFontPath = fmt.Sprintf("%s/fonts/IBMPlexSans-Regular.ttf", configDir)
+	italicFontPath = fmt.Sprintf("%s/fonts/IBMPlexSans-Italic.ttf", configDir)
+	scriptFontPath = fmt.Sprintf("%s/fonts/Pacifico-Regular.ttf", configDir)
+
+	if !checkConfigExists() {
+		fmt.Printf("%s does not exist, creating...\n", configDir)
+		createConfig()
+	}
+}
+
+func checkConfigExists() bool {
+	_, err := os.Stat(configDir)
+
+	return !os.IsNotExist(err)
+}
+
+func createConfig() {
+	if err := os.Mkdir(configDir, os.FileMode(0775)); err != nil {
+		util.CheckError(err)
+	}
+
+	if err := os.Mkdir(fmt.Sprintf("%s/static", configDir), os.FileMode(0775)); err != nil {
+		util.CheckError(err)
+	}
+
+	if err := os.Mkdir(fmt.Sprintf("%s/static/inky", configDir), os.FileMode(0775)); err != nil {
+		util.CheckError(err)
+	}
+
+	if err := os.Mkdir(fmt.Sprintf("%s/static/magtag", configDir), os.FileMode(0775)); err != nil {
+		util.CheckError(err)
+	}
+
+	if err := os.Mkdir(fmt.Sprintf("%s/tmp", configDir), os.FileMode(0775)); err != nil {
+		util.CheckError(err)
+	}
+
+	if err := os.Mkdir(fmt.Sprintf("%s/fonts", configDir), os.FileMode(0755)); err != nil {
+		util.CheckError(err)
+	}
+
+	copyResourceFile("resources/IBMPlexSans-Regular.ttf", regularFontPath)
+	copyResourceFile("resources/IBMPlexSans-Italic.ttf", italicFontPath)
+	copyResourceFile("resources/Pacifico-Regular.ttf", scriptFontPath)
+}
+
+func copyResourceFile(readFilename string, writeFilename string) {
+	log.Printf("Copying %s to %s...\n", readFilename, writeFilename)
+
+	bytes, err := resourcesFS.ReadFile(readFilename)
+	util.CheckError(err)
+
+	err = os.WriteFile(writeFilename, bytes, os.FileMode(0755))
+	util.CheckError(err)
 }
 
 func BotdFilePath() string {
@@ -77,7 +141,7 @@ func StaticPath() string {
 }
 
 func FontPaths() (string, string, string) {
-	return fmt.Sprintf("%s/fonts/IBMPlexSans-Regular.ttf", configDir), fmt.Sprintf("%s/fonts/IBMPlexSans-Italic.ttf", configDir), fmt.Sprintf("%s/fonts/Pacifico-Regular.ttf", configDir)
+	return regularFontPath, italicFontPath, scriptFontPath
 }
 
 func InkyImagePath() string {

@@ -3,7 +3,6 @@ package botd
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"os"
 	"sync"
 	"time"
@@ -12,6 +11,7 @@ import (
 	"github.com/13-bit/bulletinbird/config"
 	"github.com/13-bit/bulletinbird/platforms/inky"
 	"github.com/13-bit/bulletinbird/platforms/magtag"
+	"github.com/13-bit/bulletinbird/util"
 	"github.com/cavaliergopher/grab/v3"
 	qrcode "github.com/skip2/go-qrcode"
 )
@@ -26,6 +26,44 @@ type Botd struct {
 var (
 	botd Botd
 )
+
+func init() {
+	birdlistFileExists, botdFileExists := checkDataFilesExist()
+
+	if !birdlistFileExists {
+		fmt.Printf("%s does not exist, creating...\n", config.BirdListFilePath())
+		createBirdlistFile()
+	}
+
+	if !botdFileExists {
+		fmt.Printf("%s does not exist, creating...\n", config.BotdFilePath())
+		createBotdFile()
+	}
+}
+
+func checkDataFilesExist() (bool, bool) {
+	birdlistFileExists, botdFileExists := true, true
+
+	_, err := os.Stat(config.BirdListFilePath())
+	if os.IsNotExist(err) {
+		birdlistFileExists = false
+	}
+
+	_, err = os.Stat(config.BotdFilePath())
+	if os.IsNotExist(err) {
+		botdFileExists = false
+	}
+
+	return birdlistFileExists, botdFileExists
+}
+
+func createBotdFile() {
+	nextBotd()
+}
+
+func createBirdlistFile() {
+	birds.RegenerateBirdList()
+}
 
 func BirdOfTheDay() Botd {
 	return botd
@@ -82,9 +120,7 @@ func refresh() {
 
 func saveBotd(botd Botd) {
 	f, err := os.Create(config.BotdFilePath())
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
 
 	defer f.Close()
 
@@ -97,18 +133,14 @@ func loadBotd() Botd {
 	fmt.Println("Loading BOTD...")
 
 	f, err := os.Open(config.BotdFilePath())
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
 
 	defer f.Close()
 
 	var b Botd
 
 	err = json.NewDecoder(f).Decode(&b)
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
 
 	return b
 }
@@ -126,15 +158,10 @@ func downloadBotdImage(botd Botd) {
 
 	botdPath := config.BotdImageDownloadPath()
 
-	err := os.Remove(botdPath)
-	if err != nil {
-		fmt.Println(err)
-	}
+	_ = os.Remove(botdPath)
 
 	resp, err := grab.Get(botdPath, botd.Bird.IllustrationUrl)
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
 
 	fmt.Println("Download saved to", resp.Filename)
 }
@@ -143,9 +170,7 @@ func generateQrCode(botd Botd, size int) {
 	qrPath := config.QrCodeImageDownloadPath(size)
 
 	err := qrcode.WriteFile(botd.Bird.GuideUrl, qrcode.Medium, size, qrPath)
-	if err != nil {
-		fmt.Println(err)
-	}
+	util.CheckError(err)
 }
 
 func downloadLifeHistoryImages(botd Botd) {
@@ -156,15 +181,10 @@ func downloadLifeHistoryImages(botd Botd) {
 	lifeHistoryPaths := []string{habitatPath, foodPath, nestingPath, behaviorPath, conservationPath}
 
 	for index, path := range lifeHistoryPaths {
-		err := os.Remove(path)
-		if err != nil {
-			fmt.Println(err)
-		}
+		_ = os.Remove(path)
 
 		resp, err := grab.Get(path, botd.Bird.LifeHistoryImageUrls[index])
-		if err != nil {
-			log.Fatal(err)
-		}
+		util.CheckError(err)
 
 		fmt.Println("Download saved to", resp.Filename)
 	}

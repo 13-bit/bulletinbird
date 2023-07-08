@@ -2,25 +2,21 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
-	"log"
 	"os"
 	"time"
 
 	"github.com/13-bit/bulletinbird/birds"
 	"github.com/13-bit/bulletinbird/botd"
 	"github.com/13-bit/bulletinbird/config"
+	"github.com/13-bit/bulletinbird/util"
 )
 
 func ResetBotd() {
-	err := os.Remove(config.BotdFilePath())
-	if err != nil {
-		fmt.Println(err)
-	}
+	_ = os.Remove(config.BotdFilePath())
+
 	file, err := os.Create(config.BotdFilePath())
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
+
 	defer file.Close()
 
 	birds.RegenerateBirdList()
@@ -33,9 +29,7 @@ func ResetBotd() {
 	}
 
 	f, err := os.Create(config.BotdFilePath())
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
 
 	defer f.Close()
 

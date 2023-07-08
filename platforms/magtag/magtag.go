@@ -4,10 +4,10 @@ import (
 	"embed"
 	"fmt"
 	"image"
-	"log"
 
 	"github.com/13-bit/bulletinbird/config"
 	"github.com/13-bit/bulletinbird/img"
+	"github.com/13-bit/bulletinbird/util"
 	"github.com/disintegration/imaging"
 )
 
@@ -27,9 +27,7 @@ func processBotdImage() {
 	bmpPath := config.MagtagImagePath()
 
 	botdImage, err := imaging.Open(botdPath)
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
 
 	if botdImage.Bounds().Dx() > botdImage.Bounds().Dy() {
 		botdImage = imaging.Resize(botdImage, 100, 0, imaging.Box)
@@ -40,9 +38,7 @@ func processBotdImage() {
 	botdImage = img.RgbaToGray(botdImage)
 
 	err = imaging.Save(botdImage, bmpPath)
-	if err != nil {
-		fmt.Println(err)
-	}
+	util.CheckError(err)
 }
 
 func processQrCodeImage() {
@@ -53,56 +49,45 @@ func processQrCodeImage() {
 	bmpPath := config.MagTagQrCodeImagePath()
 
 	qrImage, err := imaging.Open(qrPath)
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
 
 	qrImage = img.RgbaToGray(qrImage)
 
 	err = imaging.Save(qrImage, bmpPath)
-	if err != nil {
-		fmt.Println(err)
-	}
+	util.CheckError(err)
 }
 
 func processLifeHistoryImages() {
 	fmt.Println("Processing life history images...")
 
 	lifeHistoryFile, err := resourcesFS.Open("resources/life-history-template.png")
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
+
 	defer lifeHistoryFile.Close()
 
 	lifeHistoryImage, _, err := image.Decode(lifeHistoryFile)
-	if err != nil {
-		fmt.Println(err)
-	}
+	util.CheckError(err)
 
 	habitatPath, foodPath, nestingPath, behaviorPath, _ := config.LifeHistoryImageDownloadPaths()
 
 	habitatImage, err := imaging.Open(habitatPath)
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
+
 	habitatImage = imaging.Resize(habitatImage, 36, 0, imaging.Box)
 
 	foodImage, err := imaging.Open(foodPath)
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
+
 	foodImage = imaging.Resize(foodImage, 36, 0, imaging.Box)
 
 	nestingImage, err := imaging.Open(nestingPath)
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
+
 	nestingImage = imaging.Resize(nestingImage, 36, 0, imaging.Box)
 
 	behaviorImage, err := imaging.Open(behaviorPath)
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
+
 	behaviorImage = imaging.Resize(behaviorImage, 36, 0, imaging.Box)
 
 	lifeHistoryImage = imaging.Overlay(lifeHistoryImage, habitatImage, image.Pt(0, 0), 255)
@@ -115,7 +100,5 @@ func processLifeHistoryImages() {
 	bmpPath := config.MagtagLifeHistoryImagePath()
 
 	err = imaging.Save(lifeHistoryImage, bmpPath)
-	if err != nil {
-		fmt.Println(err)
-	}
+	util.CheckError(err)
 }

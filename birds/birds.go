@@ -6,13 +6,13 @@ import (
 	"embed"
 	"encoding/json"
 	"fmt"
-	"log"
 	"math/big"
 	mr "math/rand"
 	"os"
 	"time"
 
 	"github.com/13-bit/bulletinbird/config"
+	"github.com/13-bit/bulletinbird/util"
 )
 
 //go:embed resources/*
@@ -28,18 +28,14 @@ type Bird struct {
 
 func GetTaxonomy() []Bird {
 	f, err := resourcesFS.Open("resources/taxonomy.json")
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
 
 	defer f.Close()
 
 	var taxonomy []Bird
 
 	err = json.NewDecoder(f).Decode(&taxonomy)
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
 
 	return taxonomy
 }
@@ -65,18 +61,14 @@ func RegenerateBirdList() {
 
 func GetBirdList() *list.List {
 	f, err := os.Open(config.BirdListFilePath())
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
 
 	defer f.Close()
 
 	var birds []Bird
 
 	err = json.NewDecoder(f).Decode(&birds)
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
 
 	birdList := list.New()
 
@@ -92,9 +84,7 @@ func SaveBirdList(birdList *list.List) {
 		RegenerateBirdList()
 	} else {
 		f, err := os.Create(config.BirdListFilePath())
-		if err != nil {
-			log.Fatal(err)
-		}
+		util.CheckError(err)
 
 		defer f.Close()
 

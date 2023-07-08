@@ -2,7 +2,6 @@ package util
 
 import (
 	"encoding/json"
-	"log"
 	"os/exec"
 	"path/filepath"
 )
@@ -12,9 +11,7 @@ func GoEnv() map[string]string {
 
 	envJson, err := cmd.Output()
 
-	if err != nil {
-		log.Fatal(err)
-	}
+	CheckError(err)
 
 	var envMap map[string]string
 

@@ -55,9 +55,7 @@ type BirdFamily struct {
 
 func fetchBirdFamilies() []string {
 	resp, err := http.Get("https://birdsoftheworld.org/bow/api/v1/taxonomy?depth=2&categoriesForCounts=species&showIucnStatusCounts=true&regionFilterId=US&locale=en")
-	if err != nil {
-		log.Fatalln(err)
-	}
+	util.CheckError(err)
 
 	defer resp.Body.Close()
 	bodyBytes, _ := io.ReadAll(resp.Body)
@@ -83,9 +81,7 @@ func fetchIllustrationAssets() map[string]string {
 
 	for _, family := range families {
 		resp, err := http.Get(fmt.Sprintf("https://birdsoftheworld.org/bow/api/v1/taxonomy?depth=2&rootTaxonCode=%s&regionFilterId=US&locale=en", family))
-		if err != nil {
-			log.Fatalln(err)
-		}
+		util.CheckError(err)
 
 		defer resp.Body.Close()
 		bodyBytes, _ := io.ReadAll(resp.Body)
@@ -111,18 +107,15 @@ func downloadTaxonomyGuide() {
 	var taxonomy []birds.Bird
 
 	taxonRes, err := http.Get("https://www.allaboutbirds.org/guide/browse/taxonomy")
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
+
 	defer taxonRes.Body.Close()
 	if taxonRes.StatusCode != 200 {
 		log.Fatalf("status code error: %d %s", taxonRes.StatusCode, taxonRes.Status)
 	}
 
 	guideDoc, err := goquery.NewDocumentFromReader(taxonRes.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
 
 	speciesCards := guideDoc.Find(".species-card")
 
@@ -139,18 +132,15 @@ func downloadTaxonomyGuide() {
 		fmt.Printf("Downloading %s (%d of %d)... ", commonName, speciesIndex, numSpecies)
 
 		guideRes, err := http.Get(guideUrl)
-		if err != nil {
-			log.Fatal(err)
-		}
+		util.CheckError(err)
+
 		defer guideRes.Body.Close()
 		if guideRes.StatusCode != 200 {
 			log.Fatalf("status code error: %d %s", guideRes.StatusCode, guideRes.Status)
 		}
 
 		speciesDoc, err := goquery.NewDocumentFromReader(guideRes.Body)
-		if err != nil {
-			log.Fatal(err)
-		}
+		util.CheckError(err)
 
 		var lifeHistoryImageUrls []string
 
@@ -175,9 +165,7 @@ func downloadTaxonomyGuide() {
 	fmt.Println("Saving taxonomy...")
 
 	f, err := os.Create(taxonomyFilePath())
-	if err != nil {
-		fmt.Println(err)
-	}
+	util.CheckError(err)
 
 	defer f.Close()
 

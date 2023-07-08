@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"image"
 	"image/color"
-	"log"
 	"os/exec"
 	"runtime"
 
 	"github.com/13-bit/bulletinbird/birds"
 	"github.com/13-bit/bulletinbird/config"
+	"github.com/13-bit/bulletinbird/util"
 	"github.com/disintegration/imaging"
 	"github.com/fogleman/gg"
 )
@@ -32,7 +32,7 @@ func Refresh() {
 	if runtime.GOOS == "linux" {
 		cmd := exec.Command("python3", config.InkyImageScript(), config.InkyImagePath())
 		if err := cmd.Run(); err != nil {
-			log.Fatal(err)
+			util.CheckError(err)
 		}
 	}
 }
@@ -57,9 +57,7 @@ func GenerateInkyImages(botd birds.Bird) {
 	inkyImage = imaging.Overlay(inkyImage, lifeHistoryImage, image.Pt(0, lifeHistoryY), 255)
 
 	err := imaging.Save(inkyImage, config.InkyImagePath())
-	if err != nil {
-		fmt.Println(err)
-	}
+	util.CheckError(err)
 }
 
 func genBotdImage() (image.Image, int, int) {
@@ -69,9 +67,7 @@ func genBotdImage() (image.Image, int, int) {
 	yOffset := 0
 
 	botdImage, err := imaging.Open(config.BotdImageDownloadPath())
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
 
 	if botdImage.Bounds().Dx() > botdImage.Bounds().Dy() {
 		botdImage = imaging.Resize(botdImage, botdWidth, 0, imaging.Box)
@@ -92,94 +88,72 @@ func genLifeHistoryImage() image.Image {
 	habitatPath, foodPath, nestingPath, behaviorPath, conservationPath := config.LifeHistoryImageDownloadPaths()
 
 	habitatImage, err := imaging.Open(habitatPath)
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
+
 	habitatImage = imaging.Resize(habitatImage, iconSize, 0, imaging.Box)
 
 	habitatIconFile, err := resourcesFS.Open("resources/icon-habitat.png")
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
+
 	defer habitatIconFile.Close()
 
 	habitatIcon, _, err := image.Decode(habitatIconFile)
-	if err != nil {
-		fmt.Println(err)
-	}
+	util.CheckError(err)
 
 	foodImage, err := imaging.Open(foodPath)
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
+
 	foodImage = imaging.Resize(foodImage, iconSize, 0, imaging.Box)
 
 	foodIconFile, err := resourcesFS.Open("resources/icon-food.png")
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
+
 	defer foodIconFile.Close()
 
 	foodIcon, _, err := image.Decode(foodIconFile)
-	if err != nil {
-		fmt.Println(err)
-	}
+	util.CheckError(err)
 
 	nestingImage, err := imaging.Open(nestingPath)
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
+
 	nestingImage = imaging.Resize(nestingImage, iconSize, 0, imaging.Box)
 
 	nestingIconFile, err := resourcesFS.Open("resources/icon-nesting.png")
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
+
 	defer nestingIconFile.Close()
 
 	nestingIcon, _, err := image.Decode(nestingIconFile)
-	if err != nil {
-		fmt.Println(err)
-	}
+	util.CheckError(err)
 
 	behaviorImage, err := imaging.Open(behaviorPath)
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
+
 	behaviorImage = imaging.Resize(behaviorImage, iconSize, 0, imaging.Box)
 
 	behaviorIconFile, err := resourcesFS.Open("resources/icon-behavior.png")
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
+
 	defer behaviorIconFile.Close()
 
 	behaviorIcon, _, err := image.Decode(behaviorIconFile)
-	if err != nil {
-		fmt.Println(err)
-	}
+	util.CheckError(err)
 
 	conservationImage, err := imaging.Open(conservationPath)
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
+
 	conservationImage = imaging.Resize(conservationImage, iconSize, 0, imaging.Box)
 
 	maskFile, err := resourcesFS.Open("resources/icon-mask.png")
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
+
 	defer behaviorIconFile.Close()
 
 	iconMask, _, err := image.Decode(maskFile)
-	if err != nil {
-		fmt.Println(err)
-	}
+	util.CheckError(err)
 
 	qrImage, err := imaging.Open(config.QrCodeImageDownloadPath(qrSize))
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
 
 	// qrImage = imaging.CropAnchor(qrImage, qrSize, qrSize, imaging.Center)
 

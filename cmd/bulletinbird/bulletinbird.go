@@ -2,12 +2,12 @@ package main
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"time"
 
 	"github.com/13-bit/bulletinbird/botd"
 	"github.com/13-bit/bulletinbird/config"
+	"github.com/13-bit/bulletinbird/util"
 	"github.com/go-co-op/gocron"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -51,9 +51,7 @@ func hello(c echo.Context) error {
 
 func birdOfTheDay(c echo.Context) error {
 	botdJson, err := json.Marshal(botd.BirdOfTheDay())
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.CheckError(err)
 
 	return c.String(http.StatusOK, string(botdJson))
 }
