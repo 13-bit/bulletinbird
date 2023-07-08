@@ -24,7 +24,7 @@ func processBotdImage() {
 	fmt.Println("Processing image...")
 
 	botdPath := config.BotdImageDownloadPath()
-	bmpPath := config.BotdImageFilePath("bmp")
+	bmpPath := config.MagtagImagePath()
 
 	botdImage, err := imaging.Open(botdPath)
 	if err != nil {
@@ -50,7 +50,7 @@ func processQrCodeImage() {
 
 	qrPath := config.QrCodeImageDownloadPath(80)
 
-	bmpPath := config.QrCodeImageFilePath("bmp")
+	bmpPath := config.MagTagQrCodeImagePath()
 
 	qrImage, err := imaging.Open(qrPath)
 	if err != nil {
@@ -112,7 +112,7 @@ func processLifeHistoryImages() {
 
 	lifeHistoryImage = img.RgbaToGray(lifeHistoryImage)
 
-	bmpPath := config.LifeHistoryImagePath("bmp")
+	bmpPath := config.MagtagLifeHistoryImagePath()
 
 	err = imaging.Save(lifeHistoryImage, bmpPath)
 	if err != nil {

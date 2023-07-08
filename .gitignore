@@ -19,3 +19,6 @@ go.work
 
 # Mage build files
 build/*
+
+# MacOS
+.DS_Store

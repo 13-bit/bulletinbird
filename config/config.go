@@ -14,7 +14,11 @@ var botdFilePath,
 	foodDownloadPath,
 	nestingDownloadPath,
 	behaviorDownloadPath,
-	conservationDownloadPath string
+	conservationDownloadPath,
+	inkyImagePath,
+	magtagImagePath,
+	magtagLifeHistoryImagePath,
+	magTagQrCodeImagePath string
 
 func init() {
 	homeDir, _ := os.UserHomeDir()
@@ -28,6 +32,10 @@ func init() {
 	nestingDownloadPath = fmt.Sprintf("%s/life-history-nesting.png", configDir)
 	behaviorDownloadPath = fmt.Sprintf("%s/life-history-behavior.png", configDir)
 	conservationDownloadPath = fmt.Sprintf("%s/life-history-conservation.png", configDir)
+	inkyImagePath = fmt.Sprintf("%s/static/inky/botd.png", configDir)
+	magtagImagePath = fmt.Sprintf("%s/static/magtag/botd.bmp", configDir)
+	magtagLifeHistoryImagePath = fmt.Sprintf("%s/static/magtag/life-history.bmp", configDir)
+	magTagQrCodeImagePath = fmt.Sprintf("%s/static/magtag/qr.bmp", configDir)
 }
 
 func BotdFilePath() string {
@@ -54,16 +62,12 @@ func LifeHistoryImageDownloadPaths() (string, string, string, string, string) {
 		conservationDownloadPath
 }
 
-func BotdImageFilePath(format string) string {
-	return fmt.Sprintf("%s/static/botd.%s", configDir, format)
+func MagTagQrCodeImagePath() string {
+	return magTagQrCodeImagePath
 }
 
-func QrCodeImageFilePath(format string) string {
-	return fmt.Sprintf("%s/static/qr.%s", configDir, format)
-}
-
-func LifeHistoryImagePath(format string) string {
-	return fmt.Sprintf("%s/static/life-history.%s", configDir, format)
+func MagtagLifeHistoryImagePath() string {
+	return magtagLifeHistoryImagePath
 }
 
 func LifeHistoryTemplateImagePath() string {
@@ -79,7 +83,11 @@ func FontPaths() (string, string, string) {
 }
 
 func InkyImagePath() string {
-	return fmt.Sprintf("%s/inky/botd.png", configDir)
+	return inkyImagePath
+}
+
+func MagtagImagePath() string {
+	return magtagImagePath
 }
 
 func InkyImageScript() string {
