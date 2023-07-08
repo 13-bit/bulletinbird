@@ -27,12 +27,12 @@ func init() {
 
 	botdFilePath = fmt.Sprintf("%s/botd.json", configDir)
 	birdListFilePath = fmt.Sprintf("%s/birdlist.json", configDir)
-	botdImageDownloadPath = fmt.Sprintf("%s/botd.png", configDir)
-	habitatDownloadPath = fmt.Sprintf("%s/life-history-habitat.png", configDir)
-	foodDownloadPath = fmt.Sprintf("%s/life-history-food.png", configDir)
-	nestingDownloadPath = fmt.Sprintf("%s/life-history-nesting.png", configDir)
-	behaviorDownloadPath = fmt.Sprintf("%s/life-history-behavior.png", configDir)
-	conservationDownloadPath = fmt.Sprintf("%s/life-history-conservation.png", configDir)
+	botdImageDownloadPath = fmt.Sprintf("%s/tmp/botd.png", configDir)
+	habitatDownloadPath = fmt.Sprintf("%s/tmp/life-history-habitat.png", configDir)
+	foodDownloadPath = fmt.Sprintf("%s/tmp/life-history-food.png", configDir)
+	nestingDownloadPath = fmt.Sprintf("%s/tmp/life-history-nesting.png", configDir)
+	behaviorDownloadPath = fmt.Sprintf("%s/tmp/life-history-behavior.png", configDir)
+	conservationDownloadPath = fmt.Sprintf("%s/tmp/life-history-conservation.png", configDir)
 	inkyImagePath = fmt.Sprintf("%s/static/inky/botd.png", configDir)
 	magtagImagePath = fmt.Sprintf("%s/static/magtag/botd.bmp", configDir)
 	magtagLifeHistoryImagePath = fmt.Sprintf("%s/static/magtag/life-history.bmp", configDir)
@@ -53,7 +53,7 @@ func BotdImageDownloadPath() string {
 }
 
 func QrCodeImageDownloadPath(size int) string {
-	return fmt.Sprintf("%s/qr-%d.png", configDir, size)
+	return fmt.Sprintf("%s/tmp/qr-%d.png", configDir, size)
 }
 
 func LifeHistoryImageDownloadPaths() (string, string, string, string, string) {
