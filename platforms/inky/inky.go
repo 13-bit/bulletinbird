@@ -5,8 +5,6 @@ import (
 	"image"
 	"image/color"
 	"log"
-	"os/exec"
-	"runtime"
 
 	"github.com/13-bit/bulletinbird/birds"
 	"github.com/13-bit/bulletinbird/config"
@@ -27,15 +25,6 @@ const (
 	iconSize          = 64
 	qrSize            = 144
 )
-
-func Refresh() {
-	if runtime.GOOS == "linux" {
-		cmd := exec.Command("python3", config.InkyImageScript(), config.InkyImagePath())
-		if err := cmd.Run(); err != nil {
-			util.CheckError(err)
-		}
-	}
-}
 
 func GenerateInkyImages(botd birds.Bird) {
 	log.Println("Generating images for Inky...")

@@ -115,7 +115,6 @@ func refresh() {
 
 	magtag.GenerateMagtagImages()
 	inky.GenerateInkyImages(botd.Bird)
-	inky.Refresh()
 }
 
 func saveBotd(botd Botd) {
