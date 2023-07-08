@@ -100,7 +100,7 @@ func fetchIllustrationAssets() map[string]string {
 }
 
 func downloadTaxonomyGuide() {
-	fmt.Println("Downloading taxonomy...")
+	log.Println("Downloading taxonomy...")
 
 	illustrationAssets := fetchIllustrationAssets()
 
@@ -129,7 +129,7 @@ func downloadTaxonomyGuide() {
 		guideUrl := fmt.Sprintf("https://www.allaboutbirds.org%s", guideRelativeUrl)
 
 		speciesIndex += 1
-		fmt.Printf("Downloading %s (%d of %d)... ", commonName, speciesIndex, numSpecies)
+		log.Printf("Downloading %s (%d of %d)... ", commonName, speciesIndex, numSpecies)
 
 		guideRes, err := http.Get(guideUrl)
 		util.CheckError(err)
@@ -159,10 +159,10 @@ func downloadTaxonomyGuide() {
 
 		taxonomy = append(taxonomy, bird)
 
-		fmt.Println("Done.")
+		log.Println("Done.")
 	})
 
-	fmt.Println("Saving taxonomy...")
+	log.Println("Saving taxonomy...")
 
 	f, err := os.Create(taxonomyFilePath())
 	util.CheckError(err)
@@ -173,7 +173,7 @@ func downloadTaxonomyGuide() {
 
 	f.Write(taxonomyJson)
 
-	fmt.Printf("%d birds saved to %s\n", len(taxonomy), taxonomyFilePath())
+	log.Printf("%d birds saved to %s\n", len(taxonomy), taxonomyFilePath())
 }
 
 func taxonomyFilePath() string {

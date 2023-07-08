@@ -2,8 +2,8 @@ package magtag
 
 import (
 	"embed"
-	"fmt"
 	"image"
+	"log"
 
 	"github.com/13-bit/bulletinbird/config"
 	"github.com/13-bit/bulletinbird/img"
@@ -21,7 +21,7 @@ func GenerateMagtagImages() {
 }
 
 func processBotdImage() {
-	fmt.Println("Processing image...")
+	log.Println("Processing image...")
 
 	botdPath := config.BotdImageDownloadPath()
 	bmpPath := config.MagtagImagePath()
@@ -42,7 +42,7 @@ func processBotdImage() {
 }
 
 func processQrCodeImage() {
-	fmt.Println("Processing QR code...")
+	log.Println("Processing QR code...")
 
 	qrPath := config.QrCodeImageDownloadPath(80)
 
@@ -58,7 +58,7 @@ func processQrCodeImage() {
 }
 
 func processLifeHistoryImages() {
-	fmt.Println("Processing life history images...")
+	log.Println("Processing life history images...")
 
 	lifeHistoryFile, err := resourcesFS.Open("resources/life-history-template.png")
 	util.CheckError(err)

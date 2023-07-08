@@ -53,7 +53,7 @@ func init() {
 	scriptFontPath = fmt.Sprintf("%s/fonts/Pacifico-Regular.ttf", configDir)
 
 	if !checkConfigExists() {
-		fmt.Printf("%s does not exist, creating...\n", configDir)
+		log.Printf("%s does not exist, creating...\n", configDir)
 		createConfig()
 	}
 }

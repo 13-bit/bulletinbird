@@ -5,7 +5,7 @@ import (
 	cr "crypto/rand"
 	"embed"
 	"encoding/json"
-	"fmt"
+	"log"
 	"math/big"
 	mr "math/rand"
 	"os"
@@ -44,10 +44,8 @@ func RegenerateBirdList() {
 	taxonomy := GetTaxonomy()
 	birdList := list.New()
 
-	seed, e := cr.Int(cr.Reader, big.NewInt(time.Now().Unix()))
-	if e != nil {
-		fmt.Print(e)
-	}
+	seed, err := cr.Int(cr.Reader, big.NewInt(time.Now().Unix()))
+	util.CheckError(err)
 
 	mr.Seed(seed.Int64())
 	randomIndices := mr.Perm(len(taxonomy))
@@ -98,6 +96,6 @@ func SaveBirdList(birdList *list.List) {
 
 		f.Write(birdListJson)
 
-		fmt.Printf("%d birds saved to %s\n", len(birds), config.BirdListFilePath())
+		log.Printf("%d birds saved to %s\n", len(birds), config.BirdListFilePath())
 	}
 }

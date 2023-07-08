@@ -2,7 +2,7 @@ package botd
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"os"
 	"sync"
 	"time"
@@ -31,12 +31,12 @@ func init() {
 	birdlistFileExists, botdFileExists := checkDataFilesExist()
 
 	if !birdlistFileExists {
-		fmt.Printf("%s does not exist, creating...\n", config.BirdListFilePath())
+		log.Printf("%s does not exist, creating...\n", config.BirdListFilePath())
 		createBirdlistFile()
 	}
 
 	if !botdFileExists {
-		fmt.Printf("%s does not exist, creating...\n", config.BotdFilePath())
+		log.Printf("%s does not exist, creating...\n", config.BotdFilePath())
 		createBotdFile()
 	}
 }
@@ -83,7 +83,7 @@ func UpdateBotd() {
 		botd = nextBotd()
 	}
 
-	fmt.Printf("%+v\n", botd.Bird)
+	log.Printf("%+v\n", botd.Bird)
 
 	refresh()
 }
@@ -130,7 +130,7 @@ func saveBotd(botd Botd) {
 }
 
 func loadBotd() Botd {
-	fmt.Println("Loading BOTD...")
+	log.Println("Loading BOTD...")
 
 	f, err := os.Open(config.BotdFilePath())
 	util.CheckError(err)
@@ -154,7 +154,7 @@ func isTodaysBotd(botdTime time.Time) bool {
 }
 
 func downloadBotdImage(botd Botd) {
-	fmt.Printf("Downloading BOTD image from %s...\n", botd.Bird.IllustrationUrl)
+	log.Printf("Downloading BOTD image from %s...\n", botd.Bird.IllustrationUrl)
 
 	botdPath := config.BotdImageDownloadPath()
 
@@ -163,7 +163,7 @@ func downloadBotdImage(botd Botd) {
 	resp, err := grab.Get(botdPath, botd.Bird.IllustrationUrl)
 	util.CheckError(err)
 
-	fmt.Println("Download saved to", resp.Filename)
+	log.Println("Download saved to", resp.Filename)
 }
 
 func generateQrCode(botd Botd, size int) {
@@ -174,7 +174,7 @@ func generateQrCode(botd Botd, size int) {
 }
 
 func downloadLifeHistoryImages(botd Botd) {
-	fmt.Println("Downloading life history images...")
+	log.Println("Downloading life history images...")
 
 	habitatPath, foodPath, nestingPath, behaviorPath, conservationPath := config.LifeHistoryImageDownloadPaths()
 
@@ -186,6 +186,6 @@ func downloadLifeHistoryImages(botd Botd) {
 		resp, err := grab.Get(path, botd.Bird.LifeHistoryImageUrls[index])
 		util.CheckError(err)
 
-		fmt.Println("Download saved to", resp.Filename)
+		log.Println("Download saved to", resp.Filename)
 	}
 }

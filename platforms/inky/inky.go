@@ -2,9 +2,9 @@ package inky
 
 import (
 	"embed"
-	"fmt"
 	"image"
 	"image/color"
+	"log"
 	"os/exec"
 	"runtime"
 
@@ -38,7 +38,7 @@ func Refresh() {
 }
 
 func GenerateInkyImages(botd birds.Bird) {
-	fmt.Println("Generating images for Inky...")
+	log.Println("Generating images for Inky...")
 
 	inkyImage := imaging.New(inkyWidth, inkyHeight, color.NRGBA{255, 255, 255, 255})
 
@@ -61,7 +61,7 @@ func GenerateInkyImages(botd birds.Bird) {
 }
 
 func genBotdImage() (image.Image, int, int) {
-	fmt.Println("Generating BOTD image for Inky...")
+	log.Println("Generating BOTD image for Inky...")
 
 	xOffset := 0
 	yOffset := 0
@@ -83,7 +83,7 @@ func genBotdImage() (image.Image, int, int) {
 }
 
 func genLifeHistoryImage() image.Image {
-	fmt.Println("Generating life history images for Inky...")
+	log.Println("Generating life history images for Inky...")
 
 	habitatPath, foodPath, nestingPath, behaviorPath, conservationPath := config.LifeHistoryImageDownloadPaths()
 
