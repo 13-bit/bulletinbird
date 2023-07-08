@@ -18,7 +18,8 @@ var botdFilePath,
 	inkyImagePath,
 	magtagImagePath,
 	magtagLifeHistoryImagePath,
-	magTagQrCodeImagePath string
+	magTagQrCodeImagePath,
+	staticPath string
 
 func init() {
 	homeDir, _ := os.UserHomeDir()
@@ -36,6 +37,7 @@ func init() {
 	magtagImagePath = fmt.Sprintf("%s/static/magtag/botd.bmp", configDir)
 	magtagLifeHistoryImagePath = fmt.Sprintf("%s/static/magtag/life-history.bmp", configDir)
 	magTagQrCodeImagePath = fmt.Sprintf("%s/static/magtag/qr.bmp", configDir)
+	staticPath = fmt.Sprintf("%s/static", configDir)
 }
 
 func BotdFilePath() string {
@@ -70,12 +72,8 @@ func MagtagLifeHistoryImagePath() string {
 	return magtagLifeHistoryImagePath
 }
 
-func LifeHistoryTemplateImagePath() string {
-	return fmt.Sprintf("%s/life-history-template.png", configDir)
-}
-
 func StaticPath() string {
-	return fmt.Sprintf("%s/static", configDir)
+	return staticPath
 }
 
 func FontPaths() (string, string, string) {
