@@ -25,10 +25,22 @@ The static images include:
 - Icons for species characteristics
 - QR code that links to the Cornell Ornithology page for the bird of the day
 
-## Dependencies
+## Prerequisites
 
-- Go 1.20.x
-- Mage
+- [Go 1.20.x](https://go.dev/dl/)
+- [Mage](https://github.com/magefile/mage)
+
+## Library Dependencies
+
+BulletinBird uses these awesome Go libraries:
+
+- [goquery](https://github.com/PuerkitoBio/goquery)
+- [grab](https://github.com/cavaliergopher/grab)
+- [imaging](https://github.com/disintegration/imaging)
+- [gg](https://github.com/fogleman/gg)
+- [gocron](https://github.com/go-co-op/gocron)
+- [echo](https://github.com/labstack/echo)
+- [go-qrcode](https://github.com/skip2/go-qrcode)
 
 ## Support
 
