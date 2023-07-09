@@ -92,6 +92,8 @@ func createConfig() {
 	copyResourceFile("resources/IBMPlexSans-Regular.ttf", regularFontPath)
 	copyResourceFile("resources/IBMPlexSans-Italic.ttf", italicFontPath)
 	copyResourceFile("resources/Pacifico-Regular.ttf", scriptFontPath)
+	copyResourceFile("resources/pacifico-license.txt", fmt.Sprintf("%s/fonts/pacifico-license.txt", configDir))
+	copyResourceFile("resources/plex-license.txt", fmt.Sprintf("%s/fonts/plex-license.txt", configDir))
 }
 
 func copyResourceFile(readFilename string, writeFilename string) {
