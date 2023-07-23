@@ -897,19 +897,6 @@
     ]
   },
   {
-    "sciName": "Phasianus colchicus",
-    "comName": "Ring-necked Pheasant",
-    "guideUrl": "https://www.allaboutbirds.org/guide/Ring-necked_Pheasant/overview",
-    "illustrationUrl": "https://cdn.download.ams.birds.cornell.edu/api/v1/asset/153000001/640",
-    "lifeHistoryImageUrls": [
-      "https://www.allaboutbirds.org/guide/images/icons/",
-      "https://www.allaboutbirds.org/guide/images/icons/",
-      "https://www.allaboutbirds.org/guide/images/icons/",
-      "https://www.allaboutbirds.org/guide/images/icons/icon-ground-forager.png",
-      "https://www.allaboutbirds.org/guide/images/icons/"
-    ]
-  },
-  {
     "sciName": "Alectoris chukar",
     "comName": "Chukar",
     "guideUrl": "https://www.allaboutbirds.org/guide/Chukar/overview",
@@ -1123,7 +1110,7 @@
     "guideUrl": "https://www.allaboutbirds.org/guide/White-winged_Dove/overview",
     "illustrationUrl": "https://cdn.download.ams.birds.cornell.edu/api/v1/asset/153384141/640",
     "lifeHistoryImageUrls": [
-      "https://www.allaboutbirds.org/guide/images/icons/",
+      "https://www.allaboutbirds.org/guide/images/icons/icon-towns.png",
       "https://www.allaboutbirds.org/guide/images/icons/icon-seeds.png",
       "https://www.allaboutbirds.org/guide/images/icons/icon-tree.png",
       "https://www.allaboutbirds.org/guide/images/icons/icon-ground-forager.png",
@@ -1514,19 +1501,6 @@
     "illustrationUrl": "https://cdn.download.ams.birds.cornell.edu/api/v1/asset/153365661/640",
     "lifeHistoryImageUrls": [
       "https://www.allaboutbirds.org/guide/images/icons/icon-forests.png",
-      "https://www.allaboutbirds.org/guide/images/icons/icon-nectar.png",
-      "https://www.allaboutbirds.org/guide/images/icons/icon-tree.png",
-      "https://www.allaboutbirds.org/guide/images/icons/icon-hovering.png",
-      "https://www.allaboutbirds.org/guide/images/icons/icon-low-concern.png"
-    ]
-  },
-  {
-    "sciName": "Leucolia violiceps",
-    "comName": "Violet-crowned Hummingbird",
-    "guideUrl": "https://www.allaboutbirds.org/guide/Violet-crowned_Hummingbird/overview",
-    "illustrationUrl": "https://cdn.download.ams.birds.cornell.edu/api/v1/asset/152826661/640",
-    "lifeHistoryImageUrls": [
-      "https://www.allaboutbirds.org/guide/images/icons/",
       "https://www.allaboutbirds.org/guide/images/icons/icon-nectar.png",
       "https://www.allaboutbirds.org/guide/images/icons/icon-tree.png",
       "https://www.allaboutbirds.org/guide/images/icons/icon-hovering.png",
@@ -4946,19 +4920,6 @@
     "illustrationUrl": "https://cdn.download.ams.birds.cornell.edu/api/v1/asset/153442861/640",
     "lifeHistoryImageUrls": [
       "https://www.allaboutbirds.org/guide/images/icons/icon-grasslands.png",
-      "https://www.allaboutbirds.org/guide/images/icons/icon-insects.png",
-      "https://www.allaboutbirds.org/guide/images/icons/icon-tree.png",
-      "https://www.allaboutbirds.org/guide/images/icons/icon-flycatching.png",
-      "https://www.allaboutbirds.org/guide/images/icons/icon-low-concern.png"
-    ]
-  },
-  {
-    "sciName": "Tyrannus dominicensis",
-    "comName": "Gray Kingbird",
-    "guideUrl": "https://www.allaboutbirds.org/guide/Gray_Kingbird/overview",
-    "illustrationUrl": "https://cdn.download.ams.birds.cornell.edu/api/v1/asset/153442871/640",
-    "lifeHistoryImageUrls": [
-      "https://www.allaboutbirds.org/guide/images/icons/",
       "https://www.allaboutbirds.org/guide/images/icons/icon-insects.png",
       "https://www.allaboutbirds.org/guide/images/icons/icon-tree.png",
       "https://www.allaboutbirds.org/guide/images/icons/icon-flycatching.png",
