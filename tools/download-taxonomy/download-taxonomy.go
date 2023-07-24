@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/13-bit/bulletinbird/birds"
 	"github.com/13-bit/bulletinbird/util"
@@ -156,6 +157,19 @@ func downloadTaxonomyGuide() {
 		bird.GuideUrl = guideUrl
 		bird.IllustrationUrl = illustrationAssets[scientificName]
 		bird.LifeHistoryImageUrls = lifeHistoryImageUrls[0:5]
+
+		stripUrl := func(url string) string {
+			retStr := strings.ReplaceAll(url, "https://www.allaboutbirds.org/guide/images/icons/icon-", "")
+			retStr = strings.ReplaceAll(retStr, ".png", "")
+
+			return retStr
+		}
+
+		bird.Habitat = stripUrl(bird.LifeHistoryImageUrls[0])
+		bird.Food = stripUrl(bird.LifeHistoryImageUrls[1])
+		bird.Nesting = stripUrl(bird.LifeHistoryImageUrls[2])
+		bird.Behavior = stripUrl(bird.LifeHistoryImageUrls[3])
+		bird.Conservation = stripUrl(bird.LifeHistoryImageUrls[4])
 
 		taxonomy = append(taxonomy, bird)
 

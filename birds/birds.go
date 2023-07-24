@@ -5,6 +5,7 @@ import (
 	cr "crypto/rand"
 	"embed"
 	"encoding/json"
+	"fmt"
 	"log"
 	"math/big"
 	mr "math/rand"
@@ -24,6 +25,11 @@ type Bird struct {
 	GuideUrl             string   `json:"guideUrl"`
 	IllustrationUrl      string   `json:"illustrationUrl"`
 	LifeHistoryImageUrls []string `json:"lifeHistoryImageUrls"`
+	Habitat              string   `json:"habitat"`
+	Food                 string   `json:"food"`
+	Nesting              string   `json:"nesting"`
+	Behavior             string   `json:"behavior"`
+	Conservation         string   `json:"conservation"`
 }
 
 func GetTaxonomy() []Bird {
@@ -36,6 +42,16 @@ func GetTaxonomy() []Bird {
 
 	err = json.NewDecoder(f).Decode(&taxonomy)
 	util.CheckError(err)
+
+	for _, b := range taxonomy {
+		fmt.Println(b.CommonName)
+		fmt.Printf("habitat: %s\n", b.LifeHistoryImageUrls[0])
+		fmt.Printf("diet: %s\n", b.LifeHistoryImageUrls[1])
+		fmt.Printf("nest: %s\n", b.LifeHistoryImageUrls[2])
+		fmt.Printf("behavior: %s\n", b.LifeHistoryImageUrls[3])
+		fmt.Printf("conservation: %s\n", b.LifeHistoryImageUrls[4])
+		fmt.Println()
+	}
 
 	return taxonomy
 }

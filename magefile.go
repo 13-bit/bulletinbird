@@ -11,6 +11,10 @@ func Build() error {
 		return err
 	}
 
+	if err := sh.Run("go", "build", "-o", "build/", "./cmd/botd-bot"); err != nil {
+		return err
+	}
+
 	if err := sh.Run("go", "build", "-o", "build/", "./tools/download-taxonomy"); err != nil {
 		return err
 	}

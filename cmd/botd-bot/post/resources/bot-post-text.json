@@ -1,0 +1,42 @@
+{
+  "lifeHistoryMapping": {
+    "aquatic-invertebrates": "aquatic invertebrates",
+    "birds": "other birds",
+    "carrion": "carrion",
+    "fish": "fish",
+    "fruit": "fruit",
+    "insects": "insects",
+    "mammals": "mammals",
+    "nectar": "nectar",
+    "omnivore": "an ominvorous diet",
+    "plants": "plants",
+    "seeds": "seeds",
+    "small-animals": "small animals",
+    "deserts": "in the desert",
+    "forests": "in forests",
+    "grasslands": "in grasslands",
+    "lakes-and-ponds": "on lakes and ponds",
+    "marshes": "in marshes",
+    "oceans": "on the ocean",
+    "open-woodlands": "in open woodlands",
+    "rivers-and-streams": "on rivers and treams",
+    "scrub": "in scrubland",
+    "shorelines": "on the shoreline",
+    "towns": "in cities and towns",
+    "tundra": "in the tundra",
+    "building": "in or on buildings",
+    "burrow": "in burrows",
+    "cavity": "in cavities",
+    "cliff": "on cliffs",
+    "floating": "on floating vegetation",
+    "ground": "on the ground",
+    "shrub": "in shrubs",
+    "tree": "in trees"
+  },
+  "postTextTemplates": [
+    "The bird of the day for {{date}}, is the {{common-name}} ({{scientific-name}}). The {{common-name}} makes its home {{habitat}}, where it nests {{nest}} and feeds on {{diet}}.",
+    "Today is {{date}}, and the bird of the day is the {{common-name}} ({{scientific-name}}). The {{common-name}} nests {{nest}} {{habitat}}. It subsists on {{diet}}.",
+    "It's {{date}}, and today's bird of the day is the {{common-name}} ({{scientific-name}}). It lives {{habitat}}, where it feeds on {{diet}} and makes its nest {{nest}}.",
+    "The {{common-name}} ({{scientific-name}}) is the bird of the day for {{date}}. The {{common-name}} lives {{habitat}}, where it nests {{nest}} and eats {{diet}}."
+  ]
+}
