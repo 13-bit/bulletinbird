@@ -55,6 +55,10 @@ func Install() error {
 		return err
 	}
 
+	if err := sh.Run("go", "install", "./cmd/botd-bot"); err != nil {
+		return err
+	}
+
 	if err := sh.Run("go", "install", "./tools/download-taxonomy"); err != nil {
 		return err
 	}
