@@ -8,6 +8,7 @@ require (
 	github.com/disintegration/imaging v1.6.2
 	github.com/fogleman/gg v1.3.0
 	github.com/go-co-op/gocron v1.25.0
+	github.com/go-resty/resty/v2 v2.7.0
 	github.com/labstack/echo/v4 v4.10.2
 	github.com/magefile/mage v1.14.0
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e

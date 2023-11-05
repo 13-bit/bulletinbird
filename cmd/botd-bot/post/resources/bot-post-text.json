@@ -15,11 +15,11 @@
     "deserts": "in the desert",
     "forests": "in forests",
     "grasslands": "in grasslands",
-    "lakes-and-ponds": "on lakes and ponds",
+    "lakes-and-ponds": "near lakes and ponds",
     "marshes": "in marshes",
-    "oceans": "on the ocean",
+    "oceans": "on or near the ocean",
     "open-woodlands": "in open woodlands",
-    "rivers-and-streams": "on rivers and treams",
+    "rivers-and-streams": "near rivers and streams",
     "scrub": "in scrubland",
     "shorelines": "on the shoreline",
     "towns": "in cities and towns",
@@ -35,8 +35,8 @@
   },
   "postTextTemplates": [
     "The bird of the day for {{date}}, is the {{common-name}} ({{scientific-name}}). The {{common-name}} makes its home {{habitat}}, where it nests {{nest}} and feeds on {{diet}}.",
-    "Today is {{date}}, and the bird of the day is the {{common-name}} ({{scientific-name}}). The {{common-name}} nests {{nest}} {{habitat}}. It subsists on {{diet}}.",
+    "Today is {{date}}, and the bird of the day is the {{common-name}} ({{scientific-name}}). The {{common-name}} eats {{diet}} and lives {{habitat}}, where it makes its nest {{nest}}.",
     "It's {{date}}, and today's bird of the day is the {{common-name}} ({{scientific-name}}). It lives {{habitat}}, where it feeds on {{diet}} and makes its nest {{nest}}.",
-    "The {{common-name}} ({{scientific-name}}) is the bird of the day for {{date}}. The {{common-name}} lives {{habitat}}, where it nests {{nest}} and eats {{diet}}."
+    "The {{common-name}} ({{scientific-name}}) is the bird of the day for {{date}}. The {{common-name}} nests {{nest}} {{habitat}}, and feeds on {{diet}}."
   ]
 }
