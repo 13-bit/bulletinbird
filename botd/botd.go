@@ -2,6 +2,7 @@ package botd
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"os"
 	"sync"
@@ -153,16 +154,26 @@ func isTodaysBotd(botdTime time.Time) bool {
 }
 
 func downloadBotdImage(botd Botd) {
-	log.Printf("Downloading BOTD image from %s...\n", botd.Bird.IllustrationUrl)
+	botdImagePath := fmt.Sprintf("%s/%s", config.IllustrationDir(), botd.Bird.IllustrationImage)
+	downloadPath := config.BotdImageDownloadPath()
 
-	botdPath := config.BotdImageDownloadPath()
+	_, err := os.Stat(botdImagePath)
+	if !os.IsNotExist(err) {
+		log.Println("Copying BOTD illustration...")
 
-	_ = os.Remove(botdPath)
+		util.CopyFile(botdImagePath, downloadPath)
 
-	resp, err := grab.Get(botdPath, botd.Bird.IllustrationUrl)
-	util.CheckError(err)
+		log.Printf("%s saved to %s\n", botdImagePath, downloadPath)
+	} else {
+		log.Printf("Downloading BOTD image from %s...\n", botd.Bird.IllustrationUrl)
 
-	log.Println("Download saved to", resp.Filename)
+		_ = os.Remove(downloadPath)
+
+		resp, err := grab.Get(downloadPath, botd.Bird.IllustrationUrl)
+		util.CheckError(err)
+
+		log.Println("Download saved to", resp.Filename)
+	}
 }
 
 func generateQrCode(botd Botd, size int) {
@@ -180,11 +191,20 @@ func downloadLifeHistoryImages(botd Botd) {
 	lifeHistoryPaths := []string{habitatPath, foodPath, nestingPath, behaviorPath, conservationPath}
 
 	for index, path := range lifeHistoryPaths {
-		_ = os.Remove(path)
+		imagePath := fmt.Sprintf("%s/%s", config.IconDir(), botd.Bird.LifeHistoryImages[index])
 
-		resp, err := grab.Get(path, botd.Bird.LifeHistoryImageUrls[index])
-		util.CheckError(err)
+		_, err := os.Stat(imagePath)
+		if !os.IsNotExist(err) {
+			util.CopyFile(imagePath, lifeHistoryPaths[index])
 
-		log.Println("Download saved to", resp.Filename)
+			log.Printf("%s copied to %s\n", imagePath, lifeHistoryPaths[index])
+		} else {
+			_ = os.Remove(path)
+
+			resp, err := grab.Get(path, botd.Bird.LifeHistoryImageUrls[index])
+			util.CheckError(err)
+
+			log.Println("Download saved to", resp.Filename)
+		}
 	}
 }

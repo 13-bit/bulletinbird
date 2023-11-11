@@ -75,10 +75,11 @@ func fetchBirdFamilies() []string {
 	return families
 }
 
-func fetchIllustrationAssets() map[string]string {
+func fetchIllustrationAssets() (map[string]string, map[string]string) {
 	families := fetchBirdFamilies()
 
-	var illustrationAssets = make(map[string]string)
+	var illustrationUrls = make(map[string]string)
+	var illustrationImages = make(map[string]string)
 
 	for _, family := range families {
 		resp, err := http.Get(fmt.Sprintf("https://birdsoftheworld.org/bow/api/v1/taxonomy?depth=2&rootTaxonCode=%s&regionFilterId=US&locale=en", family))
@@ -92,18 +93,19 @@ func fetchIllustrationAssets() map[string]string {
 
 		for _, genus := range bf.SubTaxa {
 			for _, species := range genus.SubTaxa {
-				illustrationAssets[species.SciName] = fmt.Sprintf("https://cdn.download.ams.birds.cornell.edu/api/v1/asset/%s/640", species.IllusAssetID)
+				illustrationUrls[species.SciName] = fmt.Sprintf("https://cdn.download.ams.birds.cornell.edu/api/v1/asset/%s/640", species.IllusAssetID)
+				illustrationImages[species.SciName] = fmt.Sprintf("%s.png", species.IllusAssetID)
 			}
 		}
 	}
 
-	return illustrationAssets
+	return illustrationUrls, illustrationImages
 }
 
 func downloadTaxonomyGuide() {
 	log.Println("Downloading taxonomy...")
 
-	illustrationAssets := fetchIllustrationAssets()
+	illustrationUrls, illustrationImages := fetchIllustrationAssets()
 
 	var taxonomy []birds.Bird
 
@@ -144,19 +146,29 @@ func downloadTaxonomyGuide() {
 		util.CheckError(err)
 
 		var lifeHistoryImageUrls []string
+		var lifeHistoryImages []string
+
+		stripPath := func(path string) string {
+			retStr := strings.ReplaceAll(path, "/guide/images/icons/", "")
+
+			return retStr
+		}
 
 		speciesDoc.Find(".icon").Each(func(i int, s *goquery.Selection) {
 			icon, _ := s.Find("img").Attr("src")
 
 			lifeHistoryImageUrls = append(lifeHistoryImageUrls, fmt.Sprintf("https://www.allaboutbirds.org%s", icon))
+			lifeHistoryImages = append(lifeHistoryImages, stripPath(icon))
 		})
 
 		bird := birds.Bird{}
 		bird.CommonName = commonName
 		bird.ScientificName = scientificName
 		bird.GuideUrl = guideUrl
-		bird.IllustrationUrl = illustrationAssets[scientificName]
+		bird.IllustrationUrl = illustrationUrls[scientificName]
+		bird.IllustrationImage = illustrationImages[scientificName]
 		bird.LifeHistoryImageUrls = lifeHistoryImageUrls[0:5]
+		bird.LifeHistoryImages = lifeHistoryImages[0:5]
 
 		stripUrl := func(url string) string {
 			retStr := strings.ReplaceAll(url, "https://www.allaboutbirds.org/guide/images/icons/icon-", "")
@@ -171,9 +183,12 @@ func downloadTaxonomyGuide() {
 		bird.Behavior = stripUrl(bird.LifeHistoryImageUrls[3])
 		bird.Conservation = stripUrl(bird.LifeHistoryImageUrls[4])
 
-		taxonomy = append(taxonomy, bird)
-
-		log.Println("Done.")
+		if checkBirdData(bird) {
+			taxonomy = append(taxonomy, bird)
+			log.Println("Success.")
+		} else {
+			log.Println("Failed.")
+		}
 	})
 
 	log.Println("Saving taxonomy...")
@@ -194,6 +209,26 @@ func taxonomyFilePath() string {
 	moduleBaseDir := util.GoModDir()
 
 	return fmt.Sprintf("%s/birds/resources/taxonomy.json", moduleBaseDir)
+}
+
+func checkBirdData(b birds.Bird) bool {
+	if b.ScientificName == "" {
+		return false
+	} else if b.CommonName == "" {
+		return false
+	} else if b.GuideUrl == "" {
+		return false
+	} else if b.IllustrationUrl == "" {
+		return false
+	}
+
+	for _, lh := range b.LifeHistoryImageUrls {
+		if lh == "https://www.allaboutbirds.org/guide/images/icons/" {
+			return false
+		}
+	}
+
+	return true
 }
 
 func main() {

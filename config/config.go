@@ -17,6 +17,8 @@ var configDir string
 var botdFilePath,
 	birdListFilePath,
 	botdImageDownloadPath,
+	illustrationDir,
+	iconDir,
 	habitatDownloadPath,
 	foodDownloadPath,
 	nestingDownloadPath,
@@ -38,6 +40,8 @@ func init() {
 	botdFilePath = fmt.Sprintf("%s/botd.json", configDir)
 	birdListFilePath = fmt.Sprintf("%s/birdlist.json", configDir)
 	botdImageDownloadPath = fmt.Sprintf("%s/tmp/botd.png", configDir)
+	illustrationDir = fmt.Sprintf("%s/illustrations", configDir)
+	iconDir = fmt.Sprintf("%s/icons", configDir)
 	habitatDownloadPath = fmt.Sprintf("%s/tmp/life-history-habitat.png", configDir)
 	foodDownloadPath = fmt.Sprintf("%s/tmp/life-history-food.png", configDir)
 	nestingDownloadPath = fmt.Sprintf("%s/tmp/life-history-nesting.png", configDir)
@@ -118,6 +122,10 @@ func BotdImageDownloadPath() string {
 	return botdImageDownloadPath
 }
 
+func IllustrationDir() string {
+	return illustrationDir
+}
+
 func QrCodeImageDownloadPath(size int) string {
 	return fmt.Sprintf("%s/tmp/qr-%d.png", configDir, size)
 }
@@ -128,6 +136,10 @@ func LifeHistoryImageDownloadPaths() (string, string, string, string, string) {
 		nestingDownloadPath,
 		behaviorDownloadPath,
 		conservationDownloadPath
+}
+
+func IconDir() string {
+	return iconDir
 }
 
 func MagTagQrCodeImagePath() string {
